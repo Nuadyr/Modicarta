@@ -29,7 +29,7 @@ cd Modicarta
 * **Swap Suggestions & Direct Replacements**: Recommends on-theme replacements and metagame swaps, enabling one-click deck updates.
 * **Offline PDF Export**: Generates printable PDF deck sheets and full diagnostic reports complete with card visual embeds via an integrated `jsPDF` bundle.
 * **Corpus Builder & Maintenance**: Allows pasting or uploading raw decklist collections (`.txt` or `.json`) to update or replace the current metagame reference data on the fly.
-* **DeckKit Accessibility System**: Full WCAG compliance featuring 7:1 contrast ratios, system dark mode support, non-color-only indicators, reduced-motion controls, and keyboard navigation.
+* **Accessibility System**: Full WCAG compliance featuring 7:1 contrast ratios, system dark mode support, non-color-only indicators, reduced-motion controls, and keyboard navigation.
 
 ---
 
@@ -63,7 +63,7 @@ Modicarta/
 ```
 
 ### Core Components inside `index.html`:
-* **DeckKit Design Tokens**: Dynamic CSS variable mapping for system light/dark adaptive palettes, high contrast ratios, and accessible SVG shape masks.
+* **Dynamic CSS**: variable mapping for system light/dark adaptive palettes, high contrast ratios, and accessible SVG shape masks.
 * **Embedded Metagame Corpus**: Embedded JSON dataset (`#metagame-corpus`) providing pre-calculated card frequency breakdowns across current Standard metagame archetypes.
 * **Inlined jsPDF Engine**: Integrated PDF generation engine (`#jspdf-lib`) enabling browser-side PDF document generation without dynamic remote library fetching.
 * **Scryfall Integration**: Dynamic asynchronous card data fetching for Oracle tags, mana costs, and image URLs.
