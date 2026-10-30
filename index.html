@@ -4,26 +4,45 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Modicarta: Magic Standard Deck Analyser and Metagame Match</title>
+
+        <!--
+            Modicarta by Nuadyr. Single file, no build step, no dependencies.
+            Built on the Aengus design system (boilerplate-template-7).
+            Kit styles are layers 1 to 4 and 6 of the style block. Page-only styles are in layer 5.
+
+            RULES THIS KIT FOLLOWS
+            - Dark mode follows the system setting (light-dark() tokens). Motion follows the reduced motion setting.
+            - Text pairs are 7:1 or better, control edges 3:1 or better. Re-check any colour you change.
+            - Colour never carries meaning alone: every status has its own icon shape and a word.
+            - Touch targets are at least 2.75rem. Everything works with the keyboard and with reduced motion.
+            - Use only the HTML elements your page needs. The kit styles many elements, but no page has to use them all.
+            Styles for an element that is not on the page do nothing, so you can leave them or delete them.
+            - No manifest and no service worker by default. The head has commented-out manifest and icon links: add them only if a project truly needs them.
+            - Motion that is not essential runs only inside @media (prefers-reduced-motion: no-preference).
+        -->
+
         <meta name="description" content="Free Magic: The Gathering Standard deck analyser. Paste a decklist for mana curve, synergy, metagame match, coloured mana checks and swap suggestions.">
         <meta name="author" content="Nuadyr">
         <meta name="application-name" content="Modicarta">
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
         <meta name="color-scheme" content="light dark">
+        <!-- eslint-disable @html-eslint/use-baseline -- Kept on purpose: browsers without theme-color ignore it. -->
         <meta
             name="theme-color"
-            content="#f3f5ef"
+            content="#f5f6f7"
             media="(prefers-color-scheme: light)"
         >
         <meta
             name="theme-color"
-            content="#0e1511"
+            content="#111213"
             media="(prefers-color-scheme: dark)"
         >
+        <!-- eslint-enable @html-eslint/use-baseline -->
         <link rel="canonical" href="https://nuadyr.github.io/Modicarta/">
         <link
             rel="icon"
-            href="Icons/favicon.svg"
             type="image/svg+xml"
+            href="Icons/favicon.svg"
         >
         <link
             rel="icon"
@@ -56,114 +75,115 @@
 }
         </script>
         <style>
-/* 
-   Layers: 1 tokens, 2 base, 3 layout, 4 components, 5 pages, 6 engine output (numbered result cards), 7 user preferences and assistive modes, 8 stepper, 9 specificity fixes.
-   Every text colour pair is 7:1 or better. Every control edge and icon is 3:1 or better.
-   Colour never carries meaning alone: each status has its own shape and a word. */
+/* Aengus design system.
+   Layers: 1 tokens, 2 base, 3 layout, 4 components, 5 your page, 6 user preferences and assistive modes. */
 
-/* 1. Tokens */
+/* 1. Tokens. light-dark(light value, dark value) follows the system setting.
+   1a primitives (Nuadyr Black Steel and Periwinkle), 1b semantic roles, 1c LOCKED status colours.
+   The UI is monochrome on purpose: the only strong colours on a page are the status messages. */
+
+/* 1a. Primitives. Reference only: components never use these directly, they use the roles in 1b. */
+:root {
+  /* Black Steel: cool charcoal greys with a faint blue tint. Every neutral in the UI comes from here. */
+  --Nuadyr-color-steel-100: rgba(245, 246, 247, 1);
+--Nuadyr-color-steel-200: rgba(233, 234, 236, 1);
+--Nuadyr-color-steel-300: rgba(209, 211, 215, 1);
+--Nuadyr-color-steel-400: rgba(173, 176, 184, 1);
+--Nuadyr-color-steel-500: rgba(136, 138, 150, 1);
+--Nuadyr-color-steel-600: rgba(101, 102, 114, 1);
+--Nuadyr-color-steel-700: rgba(67, 68, 75, 1);
+--Nuadyr-color-steel-800: rgba(44, 44, 48, 1);
+--Nuadyr-color-steel-900: rgba(26, 26, 29, 1);
+--Nuadyr-color-steel-950: rgba(17, 18, 19, 1);
+  /* Periwinkle: the one accent hue, a muted blue-violet that deepens to a steel blue in the darkest steps. Used only for actions, links, focus and chart marks.
+     25 and 50 are lighter tints of 100 (same hue and saturation) for dark-mode text: 100 alone only reaches about 6.9:1 on steel-950. */
+--Nuadyr-color-periwinkle-25: rgba(207, 207, 231, 1);
+--Nuadyr-color-periwinkle-50: rgba(187, 187, 221, 1);
+--Nuadyr-color-periwinkle-100: rgb(153, 153, 204);
+--Nuadyr-color-periwinkle-200: rgba(142, 144, 199, 1);
+--Nuadyr-color-periwinkle-300: rgba(131, 135, 195, 1);
+--Nuadyr-color-periwinkle-400: rgba(101, 114, 183, 1);
+--Nuadyr-color-periwinkle-500: rgba(74, 97, 166, 1);
+--Nuadyr-color-periwinkle-600: rgba(59, 87, 138, 1);
+--Nuadyr-color-periwinkle-700: rgba(46, 74, 111, 1);
+--Nuadyr-color-periwinkle-800: rgba(34, 61, 85, 1);
+--Nuadyr-color-periwinkle-900: rgba(25, 49, 66, 1);
+--Nuadyr-color-periwinkle-950: rgba(18, 37, 48, 1);
+
+--Nuadyr-color-white: rgba(255, 255, 255, 1);
+}
+
+/* 1b. Roles. */
 :root {
   color-scheme: light dark;
 
   --font-body: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-head: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
 
-  --paper: #f3f5ef;
-  --surface: #ffffff;
-  --surface-2: #e9eee5;
-  --ink: #111a15;
-  --ink-soft: #33423a;
-  --line: #55645b;
-  --line-soft: #c3cdc2;
+  --paper:         light-dark(var(--Nuadyr-color-steel-100), var(--Nuadyr-color-steel-950));
+  --surface:       light-dark(var(--Nuadyr-color-white), var(--Nuadyr-color-steel-900));
+  --surface-2:     light-dark(var(--Nuadyr-color-steel-200), var(--Nuadyr-color-steel-800));
+  --ink:           light-dark(var(--Nuadyr-color-steel-950), var(--Nuadyr-color-steel-100));
+  --ink-soft:      light-dark(var(--Nuadyr-color-steel-700), var(--Nuadyr-color-steel-300));
+  --line:          light-dark(var(--Nuadyr-color-steel-600), var(--Nuadyr-color-steel-500));
+  --line-soft:     light-dark(var(--Nuadyr-color-steel-300), var(--Nuadyr-color-steel-700));
 
-  --brand: #17261f;
-  --brand-2: #223a2d;
-  --on-brand: #f4f7f1;
-  --on-brand-soft: #cfdcd0;
+  --brand:         light-dark(var(--Nuadyr-color-steel-900), var(--Nuadyr-color-steel-900));
+  --brand-2:       light-dark(var(--Nuadyr-color-steel-800), var(--Nuadyr-color-steel-800));
+  --on-brand:   var(--Nuadyr-color-steel-100);
+  --on-brand-soft: var(--Nuadyr-color-steel-300);
 
-  --action: #1b4d38;
-  --action-hover: #123626;
-  --on-action: #ffffff;
-  --link: #0a4a73;
-  --focus: #17261f;
+  --action:        light-dark(var(--Nuadyr-color-periwinkle-800), var(--Nuadyr-color-periwinkle-50));
+  --action-hover:  light-dark(var(--Nuadyr-color-periwinkle-900), var(--Nuadyr-color-periwinkle-25));
+  --on-action:     light-dark(var(--Nuadyr-color-white), var(--Nuadyr-color-steel-950));
+  --link:          light-dark(var(--Nuadyr-color-periwinkle-800), var(--Nuadyr-color-periwinkle-50));
+  --focus:         light-dark(var(--Nuadyr-color-steel-950), var(--Nuadyr-color-periwinkle-300));
 
-  --ok-ink: #064e3f;   --ok-mark: #0b7a56;   --ok-tint: #e0f3ec;
-  --warn-ink: #5a3d00; --warn-mark: #a85f00; --warn-tint: #fbf0d6;
-  --problem-ink: #7a0f1f; --problem-mark: #c0262d; --problem-tint: #fbe4e7;
-  --info-ink: #0f3f7a; --info-mark: #1f66b0; --info-tint: #e1ecf8;
+  /* Secondary emphasis stays monochrome: an inverted steel button. Never use it for status. */
+  --accent-2:      light-dark(var(--Nuadyr-color-steel-800), var(--Nuadyr-color-steel-200));
+  --accent-2-hover: light-dark(var(--Nuadyr-color-steel-950), var(--Nuadyr-color-steel-100));
+  --on-accent-2:   light-dark(var(--Nuadyr-color-white), var(--Nuadyr-color-steel-950));
 
-  --chart: #1d6a8a;
-  --chart-line: #111a15;
+  --chart:         light-dark(var(--Nuadyr-color-periwinkle-700), var(--Nuadyr-color-periwinkle-400));
+  --chart-line: var(--ink);
 
-  --pip-w: #f5efd3; --pip-w-line: #3a3220; --pip-w-ink: #2b2518;
-  --pip-u: #14508c; --pip-u-line: #0b2e52; --pip-u-ink: #ffffff;
-  --pip-b: #26212a; --pip-b-line: #0d0b0f; --pip-b-ink: #ffffff;
-  --pip-r: #a3260f; --pip-r-line: #5e1408; --pip-r-ink: #ffffff;
-  --pip-g: #0e5a35; --pip-g-line: #07331e; --pip-g-ink: #ffffff;
-  --pip-c: #d9dcd8; --pip-c-line: #3e4640; --pip-c-ink: #1b221d;
+  --mark:          light-dark(var(--Nuadyr-color-periwinkle-50), var(--Nuadyr-color-periwinkle-800));
+  --scrim:         rgba(17, 18, 19, 0.72);
 
   --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-5: 1.5rem; --s-6: 2rem; --s-7: 3rem; --s-8: 4rem;
   --r-1: 0.25rem; --r-2: 0.5rem; --r-3: 0.875rem;
-  --t-sm: clamp(0.875rem, 0.84rem + 0.15vw, 0.9375rem);
+  --t-sm:   clamp(0.875rem, 0.84rem + 0.15vw, 0.9375rem);
   --t-base: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
-  --t-md: clamp(1.125rem, 1.04rem + 0.4vw, 1.3125rem);
-  --t-lg: clamp(1.375rem, 1.18rem + 0.85vw, 1.75rem);
-  --t-xl: clamp(1.75rem, 1.35rem + 1.7vw, 2.5rem);
+  --t-md:   clamp(1.125rem, 1.04rem + 0.4vw, 1.3125rem);
+  --t-lg:   clamp(1.375rem, 1.18rem + 0.85vw, 1.75rem);
+  --t-xl:   clamp(1.75rem, 1.35rem + 1.7vw, 2.5rem);
   --pad-card: clamp(var(--s-4), 3vw, var(--s-5));
-  --sticky-h: 6rem;
   --target: 2.75rem;
   --measure: 70rem;
   --text-measure: 42rem;
   --rule: 0.125rem;
+
   --mask-chev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m9.5 6 6 6-6 6' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  --mask-info: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='3.5' y='3.5' width='17' height='17' rx='4' fill='none' stroke='black' stroke-width='2.2'/%3E%3Cpath d='M12 11v5.5' stroke='black' stroke-width='2.6' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='7.8' r='1.5'/%3E%3C/svg%3E");
-  --mask-ok: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='black' stroke-width='2.2'/%3E%3Cpath d='m7.8 12.3 3 3 5.4-6' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  --mask-warn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3.8 21.2 19.5H2.8z' fill='none' stroke='black' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M12 10v4.3' stroke='black' stroke-width='2.6' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='16.9' r='1.4'/%3E%3C/svg%3E");
-  --mask-problem: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.8 21.2 12 12 21.2 2.8 12z' fill='none' stroke='black' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='m8.9 8.9 6.2 6.2M15.1 8.9l-6.2 6.2' stroke='black' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  --mask-info: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='3.5' y='3.5' width='17' height='17' rx='4' fill='none' stroke='black' stroke-width='2.2'/%3E%3Cpath d='M12 11v5M12 7.6v.2' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  --mask-ok: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='black' stroke-width='2.2'/%3E%3Cpath d='m7.8 12.3 3 3 5.4-6' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --mask-warn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3.8 21.2 19.5H2.8z' fill='none' stroke='black' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M12 10v4.5M12 17v.2' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  --mask-problem: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.8 21.2 12 12 21.2 2.8 12z' fill='none' stroke='black' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='m9 9 6 6M15 9l-6 6' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
-/* 1b. Dark theme: follows the system setting (screen only, so print stays light). Pairs keep 7:1 text and 3:1 edges. */
-@media screen and (prefers-color-scheme: dark) {
-  :root {
-    --paper: #0e1511;
-    --surface: #17211b;
-    --surface-2: #213028;
-    --ink: #eef3ec;
-    --ink-soft: #c4d0c6;
-    --line: #8fa497;
-    --line-soft: #34453b;
-
-    --brand: #0a110d;
-    --brand-2: #16261d;
-    --on-brand: #f4f7f1;
-    --on-brand-soft: #cfdcd0;
-
-    --action: #8fd9b0;
-    --action-hover: #b0e8c8;
-    --on-action: #07140d;
-    --link: #8cc8f2;
-    --focus: #f4f7f1;
-
-    --ok-ink: #8fe0c0;   --ok-mark: #4fcf9f;   --ok-tint: #12302a;
-    --warn-ink: #f2cf85; --warn-mark: #e8a23a; --warn-tint: #33280f;
-    --problem-ink: #ffb3bb; --problem-mark: #ff6f78; --problem-tint: #38161b;
-    --info-ink: #a9cdf5; --info-mark: #6fb0f0; --info-tint: #14283f;
-
-    --chart: #6fc0e0;
-    --chart-line: #eef3ec;
-
-    --pip-w-line: #d9cfa6;
-    --pip-u: #2f78c4; --pip-u-line: #8fb8e6;
-    --pip-b: #3a3342; --pip-b-line: #b9aec6;
-    --pip-r: #c4452b; --pip-r-line: #f0a08f;
-    --pip-g: #1f8a55; --pip-g-line: #8fd9b0;
-    --pip-c-line: #8a928c;
-  }
+/* 1c. LOCKED status colours. Frozen at the kit's original values.
+   Literal values only: no var(), no primitives, no roles. A palette change in 1a or 1b cannot reach them.
+   Do not edit, override or redefine these anywhere else. Every status also has its own icon shape and a word. */
+:root {
+  --ok-ink:      light-dark(#064e3f, #00FF00CC); --ok-mark:      light-dark(#0b7a56, #66FF33); --ok-tint:      light-dark(#e0f3ec, #12302a);
+  --warn-ink:    light-dark(#5a3d00, #FFFF33CC); --warn-mark:    light-dark(#a85f00, #FFFFF66); --warn-tint:    light-dark(#fbf0d6, #33280f);
+  --problem-ink: light-dark(#7a0f1f, #FF3333E6); --problem-mark: light-dark(#c0262d, #FF3333); --problem-tint: light-dark(#fbe4e7, #330000);
+  --info-ink:    light-dark(#0f3f7a, #a9cdf5); --info-mark:    light-dark(#1f66b0, #55aff0); --info-tint:    light-dark(#e1ecf8, #052136);
 }
 
 /* 2. Base */
 *, *::before, *::after { box-sizing: border-box; }
-html { font-size: 100%; -webkit-text-size-adjust: 100%; scroll-padding-block-start: var(--sticky-h); }
+html { font-size: 100%; -webkit-text-size-adjust: 100%; scroll-padding-block-start: var(--s-6); }
 body {
   margin: 0; min-block-size: 100vb; display: flex; flex-direction: column;
   background: var(--paper); color: var(--ink);
@@ -180,34 +200,34 @@ p, ul, ol, dl { margin: 0; }
 p + p { margin-block-start: var(--s-3); }
 a { color: var(--link); text-decoration-thickness: 0.09em; text-underline-offset: 0.18em; }
 a:hover { text-decoration-thickness: 0.18em; }
-code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 0.9em; background: var(--surface-2); padding: 0 0.25em; border-radius: var(--r-1); }
-abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.18em; cursor: help; }
-img { max-inline-size: 100%; }
+code { font-family: var(--font-mono); font-size: 0.9em; background: var(--surface-2); padding: 0 0.25em; border-radius: var(--r-1); }
+img, svg { max-inline-size: 100%; }
 [hidden] { display: none !important; }
 
 :focus-visible { outline: 0.25rem solid var(--focus); outline-offset: 0.125rem; border-radius: var(--r-1); }
-h1:focus, h2:focus, dt:focus { outline: none; }
-h1:focus-visible, h2:focus-visible, dt:focus-visible { outline: 0.25rem solid var(--focus); outline-offset: 0.25rem; }
+h1:focus, h2:focus, main:focus { outline: none; }
+h1:focus-visible, h2:focus-visible { outline: 0.25rem solid var(--focus); outline-offset: 0.25rem; }
 
 .vh, .visually-hidden { position: absolute; inline-size: 1px; block-size: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.skip-link { position: absolute; inset-inline-start: var(--s-3); inset-block-start: -10rem; z-index: 10; padding: var(--s-2) var(--s-4); background: var(--brand); color: var(--on-brand); border-radius: var(--r-2); font-weight: 700; }
+.skip-link:focus { inset-block-start: var(--s-3); }
 
 .icon { inline-size: 1.25em; block-size: 1.25em; flex: none; vertical-align: -0.2em; }
-.icon--lg { inline-size: 1.75rem; block-size: 1.75rem; }
-.icon--xl { inline-size: 2.5rem; block-size: 2.5rem; }
-.pip { inline-size: 1.5rem; block-size: 1.5rem; flex: none; vertical-align: middle; font-family: var(--font-body); }
-.pip--sm { inline-size: 1.125rem; block-size: 1.125rem; }
 
 /* 3. Layout */
 .wrap { inline-size: 100%; max-inline-size: var(--measure); margin-inline: auto; padding-inline: var(--s-4); }
 main { flex: 1 0 auto; inline-size: 100%; max-inline-size: var(--measure); margin-inline: auto; padding: var(--s-5) var(--s-4) var(--s-7); }
-main:focus { outline: none; }
 .stack > * + * { margin-block-start: var(--s-4); }
+.stack-lg > * + * { margin-block-start: var(--s-6); }
+.row { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; }
 .split { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-5); align-items: start; }
 .split > * { min-inline-size: 0; }
 @media (width >= 56rem) { .split { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); } }
 
 /* 4. Components */
-/* Header and navigation */
+/* Page header */
+.site-header { display: grid; gap: var(--s-3); padding-block-end: var(--s-5); }
+.site-header .lede { font-size: var(--t-md); max-inline-size: var(--text-measure); color: var(--ink-soft); }
 
 /* Buttons. Plain buttons are the main action. */
 button, .btn {
@@ -220,38 +240,40 @@ button:hover, .btn:hover { background: var(--action-hover); border-color: var(--
 button:disabled, button[aria-disabled="true"] { cursor: not-allowed; color: var(--ink-soft); background: var(--surface-2); border-color: var(--line); border-style: dashed; }
 button.secondary, .btn--secondary { color: var(--ink); background: var(--surface); border-color: var(--line); }
 button.secondary:hover, .btn--secondary:hover { background: var(--surface-2); border-color: var(--ink); }
-button.small { min-block-size: var(--target); padding: var(--s-1) var(--s-3); font-size: var(--t-sm); }
-.linklike { min-block-size: var(--target); padding: 0 var(--s-1); color: var(--link); background: none; border: 0; text-decoration: underline; text-underline-offset: 0.18em; font-weight: 400; justify-content: flex-start; text-align: start; }
+button.small { padding: var(--s-1) var(--s-3); font-size: var(--t-sm); }
+.linklike { min-block-size: var(--target); padding: 0 var(--s-1); color: var(--link); background: none; border: 0; text-decoration: underline; text-underline-offset: 0.18em; font-weight: 400; }
 .linklike:hover { background: none; text-decoration-thickness: 0.18em; }
-a.linklike { display: inline; min-block-size: 0; padding: 0; font-weight: 600; text-align: start; overflow-wrap: anywhere; }
-.icon--spin { animation: none; }
-button[aria-busy="true"] .icon--spin { display: inline-block; }
 
 /* Forms */
 .field { display: grid; gap: var(--s-1); }
 .field > label, legend { font-weight: 700; }
 fieldset { margin: 0; padding: 0; border: 0; min-inline-size: 0; }
-input[type="text"], input[type="search"], select, textarea {
+input[type="text"], input[type="search"], input[type="number"], input[type="email"], input[type="url"], input[type="tel"], input[type="password"], input[type="date"], input[type="time"], select, textarea {
   inline-size: 100%; min-block-size: var(--target); padding: var(--s-2) var(--s-3);
   font: inherit; color: var(--ink); background: var(--surface); border: var(--rule) solid var(--line); border-radius: var(--r-2);
 }
-textarea { min-block-size: 12rem; resize: vertical; font-size: var(--t-sm); line-height: 1.5; }
+textarea { min-block-size: 10rem; resize: vertical; font-size: var(--t-sm); line-height: 1.5; }
 input[type="file"] { max-inline-size: 100%; min-block-size: var(--target); font: inherit; }
 .hint { color: var(--ink-soft); font-size: var(--t-sm); }
 .field .hint { margin: 0; }
 .checkline { display: flex; align-items: center; gap: var(--s-3); min-block-size: var(--target); }
 .checkline input { inline-size: 1.5rem; block-size: 1.5rem; margin: 0; flex: none; accent-color: var(--action); }
 
-/* Panels and notes */
+/* Panels, notes and live regions */
 .panel { background: var(--surface); border: var(--rule) solid var(--line-soft); border-radius: var(--r-3); padding: var(--s-5); }
 .panel > * + * { margin-block-start: var(--s-4); }
+.panel > h2 + *, .panel > h3 + * { margin-block-start: var(--s-3); }
 .note, [role="alert"]:not([hidden]) {
   display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-3); align-items: start;
   padding: var(--s-3) var(--s-4); color: var(--info-ink); background: var(--info-tint);
-  border: var(--rule) solid var(--info-mark); border-inline-start-width: 0.5rem; border-radius: var(--r-2); font-size: var(--t-base);
+  border: var(--rule) solid var(--info-mark); border-inline-start-width: 0.5rem; border-radius: var(--r-2);
 }
-.note::before, [role="alert"]:not([hidden])::before { content: ""; inline-size: 1.5rem; block-size: 1.5rem; margin-block-start: 0.1rem; background: currentColor; mask: var(--mask-info) center / contain no-repeat; -webkit-mask: var(--mask-info) center / contain no-repeat; }
+.note::before, [role="alert"]:not([hidden])::before {
+  content: ""; inline-size: 1.5rem; block-size: 1.5rem; margin-block-start: 0.1rem; background: currentColor;
+  mask: var(--mask-info) center / contain no-repeat; -webkit-mask: var(--mask-info) center / contain no-repeat;
+}
 .note > * { min-inline-size: 0; }
+.note p + p { margin-block-start: var(--s-2); }
 .note--ok { color: var(--ok-ink); background: var(--ok-tint); border-color: var(--ok-mark); }
 .note--ok::before { mask-image: var(--mask-ok); -webkit-mask-image: var(--mask-ok); }
 .note--warn { color: var(--warn-ink); background: var(--warn-tint); border-color: var(--warn-mark); }
@@ -260,27 +282,17 @@ input[type="file"] { max-inline-size: 100%; min-block-size: var(--target); font:
 .note--problem::before, [role="alert"]:not([hidden])::before { mask-image: var(--mask-problem); -webkit-mask-image: var(--mask-problem); }
 [role="status"] { color: var(--ink-soft); font-size: var(--t-sm); }
 [role="status"]:empty { display: none; }
-.note[role="status"], .try-bar { font-size: var(--t-base); color: var(--ok-ink); }
 
 /* Status badge: word plus shape plus colour */
-.badge { display: inline-flex; align-items: center; gap: var(--s-1); padding: 0 var(--s-2); min-block-size: 1.75rem; border: var(--rule) solid currentColor; border-radius: var(--r-2); font-size: var(--t-sm); font-weight: 700; color: var(--ink-soft); background: var(--surface); }
+.badge { display: inline-flex; align-items: center; gap: var(--s-1); padding: 0 var(--s-2); min-block-size: 1.75rem; border: var(--rule) solid currentColor; border-radius: var(--r-2); font-size: var(--t-sm); font-weight: 700; color: var(--ink); background: var(--surface); }
+.badge::before { content: ""; inline-size: 1rem; block-size: 1rem; flex: none; background: currentColor; mask: var(--mask-info) center / contain no-repeat; -webkit-mask: var(--mask-info) center / contain no-repeat; }
 .badge--ok { color: var(--ok-ink); background: var(--ok-tint); }
+.badge--ok::before { mask-image: var(--mask-ok); -webkit-mask-image: var(--mask-ok); }
 .badge--warn { color: var(--warn-ink); background: var(--warn-tint); }
+.badge--warn::before { mask-image: var(--mask-warn); -webkit-mask-image: var(--mask-warn); }
 .badge--problem { color: var(--problem-ink); background: var(--problem-tint); }
+.badge--problem::before { mask-image: var(--mask-problem); -webkit-mask-image: var(--mask-problem); }
 .badge--info { color: var(--info-ink); background: var(--info-tint); }
-.badge .icon { color: inherit; }
-
-/* Journey stepper */
-.journey ol { list-style: none; padding: 0; display: grid; gap: var(--s-1); grid-template-columns: repeat(4, minmax(0, 1fr)); counter-reset: none; }
-.journey__state { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; text-align: center; gap: 0 var(--s-1); max-inline-size: 100%; min-inline-size: 0; font-size: var(--t-sm); font-weight: 400; line-height: 1.2; overflow-wrap: anywhere; }
-.journey__state::before { content: ""; display: none; inline-size: 1rem; block-size: 1rem; flex: none; background: currentColor; mask: center / contain no-repeat; -webkit-mask: center / contain no-repeat; }
-.journey li[data-state="done"] .journey__state::before { display: block; mask-image: var(--mask-ok); -webkit-mask-image: var(--mask-ok); }
-.journey li[data-state="current"] .journey__state::before { display: block; mask-image: var(--mask-chev); -webkit-mask-image: var(--mask-chev); }
-.journey li[data-phase="error"] .journey__state::before { display: block; mask-image: var(--mask-problem); -webkit-mask-image: var(--mask-problem); }
-@media (prefers-reduced-motion: no-preference) { .icon--spin { animation: spin 1.1s linear infinite; } }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Pager: numbered links, current page marked with fill, bold and underline */
 
 /* Disclosure */
 details { border-block-start: var(--rule) solid var(--line-soft); padding-block-start: var(--s-2); }
@@ -288,7 +300,7 @@ summary { display: flex; align-items: center; gap: var(--s-2); min-block-size: v
 summary::-webkit-details-marker { display: none; }
 summary::before { content: ""; inline-size: 1.25rem; block-size: 1.25rem; flex: none; background: currentColor; mask: var(--mask-chev) center / contain no-repeat; -webkit-mask: var(--mask-chev) center / contain no-repeat; }
 details[open] > summary::before { transform: rotate(90deg); }
-summary h3, summary h4 { display: inline; font-size: inherit; font-family: var(--font-body); font-weight: 700; margin: 0; }
+summary h2, summary h3, summary h4 { display: inline; font-size: inherit; font-family: var(--font-body); font-weight: 700; margin: 0; }
 details > :not(summary) { margin-block-start: var(--s-3); }
 
 /* Tables */
@@ -299,50 +311,15 @@ caption { text-align: start; font-weight: 700; padding: var(--s-2) var(--s-3); }
 th, td { text-align: start; padding: var(--s-2) var(--s-3); vertical-align: top; }
 thead th { background: var(--surface-2); border-block-end: var(--rule) solid var(--line); white-space: nowrap; }
 tbody th, tbody td { border-block-end: 1px solid var(--line-soft); }
-td.num { text-align: end; }
+th.num, td.num { text-align: end; }
 
-/* Mana pips and cost */
-.cost { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.1875rem; }
-.pip-n { display: inline-flex; align-items: center; justify-content: center; min-inline-size: 1.5rem; block-size: 1.5rem; padding-inline: 0.2rem; border-radius: 999px; background: var(--pip-c); color: var(--pip-c-ink); border: 0.125rem solid var(--pip-c-line); font-size: 0.8125rem; font-weight: 700; line-height: 1; }
-
-/* 5. Pages */
-.back { margin-block-end: var(--s-4); }
-.back a { display: inline-flex; align-items: center; gap: var(--s-2); min-block-size: var(--target); }
-
-
-.steps { list-style: none; padding: 0; display: grid; gap: var(--s-4); grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
-.step-card .btn, .step-card button { justify-self: start; }
-
-
-.charts { display: grid; gap: var(--s-5) var(--s-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
-.charts > div { min-inline-size: 0; display: grid; gap: var(--s-2); align-content: start; }
-.charts h3 { margin: 0; }
-.overview { font-size: var(--t-md); line-height: 1.5; max-inline-size: var(--text-measure); }
-
-.result { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: var(--s-3) var(--s-4); align-items: start; padding: var(--s-4); background: var(--surface); border: var(--rule) solid var(--line-soft); border-radius: var(--r-3); }
-.result details { padding-block-start: 0; border: 0; }
-@media (width >= 40rem) { .result { grid-template-columns: 6rem minmax(0, 1fr); } .result__thumb { inline-size: 6rem; } }
-
-
-.pip-key { list-style: none; padding: 0; display: grid; gap: var(--s-2); }
-.pip-key li { display: flex; align-items: center; gap: var(--s-3); }
-
-.icon-grid { list-style: none; padding: 0; display: grid; gap: var(--s-2); grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr)); }
-.icon-grid li { display: grid; justify-items: center; gap: var(--s-1); padding: var(--s-3) var(--s-2); background: var(--surface); border: var(--rule) solid var(--line-soft); border-radius: var(--r-2); font-size: var(--t-sm); text-align: center; overflow-wrap: anywhere; }
-
-/* Footer */
-
-/* 6. Engine output: numbered result cards, tiles, facts, chips, swap rows */
-#metrics-output { display: grid; gap: var(--s-5); counter-reset: msec; }
-#metrics-output > * { min-inline-size: 0; margin: 0; }
-.mcard { counter-increment: msec; display: grid; gap: var(--s-4); align-content: start; padding: var(--pad-card); background: var(--surface); border: var(--rule) solid var(--line-soft); border-radius: var(--r-3); }
-.mcard > *, .mpanel > * { min-inline-size: 0; margin: 0; }
-.mcard > h3 { display: flex; align-items: center; gap: var(--s-3); }
-.mcard > h3::before { content: counter(msec); display: inline-grid; place-items: center; flex: none; min-inline-size: 2rem; block-size: 2rem; border-radius: var(--r-2); background: var(--brand); color: var(--on-brand); font: 700 var(--t-sm) / 1 var(--font-body); font-variant-numeric: tabular-nums; }
-.mcard p, .facts li { max-inline-size: var(--text-measure); }
-.mpanel { display: grid; gap: var(--s-4); }
-
-/* Summary tiles, fact lists, chips, match summary */
+/* Numbered result cards, stat tiles, fact lists, chips */
+.cards { display: grid; gap: var(--s-5); counter-reset: card; }
+.card { counter-increment: card; display: grid; gap: var(--s-4); align-content: start; padding: var(--pad-card); background: var(--surface); border: var(--rule) solid var(--line-soft); border-radius: var(--r-3); }
+.card > * { min-inline-size: 0; margin: 0; }
+.card > h3 { display: flex; align-items: center; gap: var(--s-3); }
+.card > h3::before { content: counter(card); display: inline-grid; place-items: center; flex: none; min-inline-size: 2rem; block-size: 2rem; border-radius: var(--r-2); background: var(--brand); color: var(--on-brand); font: 700 var(--t-base) / 1 var(--font-body); }
+.card p, .facts li { max-inline-size: var(--text-measure); }
 .stats { display: grid; gap: var(--s-3); grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr)); }
 .stat { display: grid; gap: var(--s-1); align-content: start; padding: var(--s-3) var(--s-4); background: var(--surface-2); border: var(--rule) solid var(--line-soft); border-radius: var(--r-2); }
 .stat__label { color: var(--ink-soft); font-size: var(--t-sm); line-height: 1.3; }
@@ -350,104 +327,215 @@ td.num { text-align: end; }
 .facts, .chips { list-style: none; padding: 0; }
 .facts { display: grid; gap: var(--s-2); }
 .facts li { padding-inline-start: var(--s-3); border-inline-start: 0.25rem solid var(--line-soft); }
-.chips { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); gap: var(--s-2); }
-.chip { display: flex; align-items: center; min-inline-size: 0; min-block-size: 1.75rem; padding: var(--s-1) var(--s-3); background: var(--surface); border: var(--rule) solid var(--line); border-radius: 0; line-height: 1.35; font-size: var(--t-sm); overflow-wrap: anywhere; }
+.chips { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); gap: var(--s-2); }
+.chip { display: flex; align-items: center; min-inline-size: 0; min-block-size: 1.75rem; padding: var(--s-1) var(--s-3); background: var(--surface); border: var(--rule) solid var(--line); border-radius: var(--r-2); font-size: var(--t-sm); overflow-wrap: anywhere; }
+
+/* Content elements: text, lists, quotes, code, media, dialog. Wrap long-form text in .prose.
+   Use only the elements your page needs. A rule for an element you never use is harmless: leave it or delete it. */
+.prose { max-inline-size: var(--text-measure); }
+.prose :is(ul, ol) { padding-inline-start: var(--s-5); }
+.prose :is(ul, ol) > li + li, .prose :is(ul, ol) :is(ul, ol) { margin-block-start: var(--s-1); }
+menu { display: flex; flex-wrap: wrap; gap: var(--s-2); margin: 0; padding: 0; list-style: none; }
+dt { font-weight: 700; }
+dd { margin-inline: 0; padding-inline-start: var(--s-4); }
+dd + dt { margin-block-start: var(--s-3); }
+blockquote { margin: 0; padding-inline-start: var(--s-4); border-inline-start: 0.25rem solid var(--line); }
+figure { margin: 0; }
+figcaption { margin-block-start: var(--s-2); color: var(--ink-soft); font-size: var(--t-sm); }
+img { block-size: auto; border-radius: var(--r-2); }
+cite, var { font-style: italic; }
+address { font-style: normal; }
+abbr[title] { text-decoration: underline dotted; text-underline-offset: 0.18em; }
+mark { padding-inline: 0.2em; color: var(--ink); background: var(--mark); border-radius: var(--r-1); }
+kbd, samp { font-family: var(--font-mono); font-size: 0.9em; }
+kbd { padding: 0.05em 0.4em; background: var(--surface); border: 1px solid var(--line); border-block-end-width: 0.2em; border-radius: var(--r-1); white-space: nowrap; }
+samp { padding: 0 0.25em; background: var(--surface-2); border-radius: var(--r-1); }
+sub, sup { font-size: 0.75em; line-height: 0; }
+small { font-size: var(--t-sm); }
+ins { text-decoration-style: double; }
+/* Edits are announced to screen readers with hidden start and end labels, so they do not rely on the line style alone. */
+ins::before, ins::after, del::before, del::after { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+ins::before { content: " [inserted text start] "; } ins::after { content: " [inserted text end] "; }
+del::before { content: " [deleted text start] "; } del::after { content: " [deleted text end] "; }
+pre { margin: 0; padding: var(--s-3) var(--s-4); overflow-x: auto; font-family: var(--font-mono); font-size: var(--t-sm); line-height: 1.5; tab-size: 2; color: var(--ink); background: var(--surface-2); border: var(--rule) solid var(--line-soft); border-radius: var(--r-2); }
+pre code { padding: 0; font-size: inherit; background: none; }
+pre:focus-visible { outline-offset: 0; }
+hr { block-size: 0; margin: 0; border: 0; border-block-start: var(--rule) solid var(--line-soft); }
+
+/* Navigation lists (in-page links, breadcrumbs), search, sample boxes, canvas, dialog */
+search { display: block; }
+.navlist { display: flex; flex-wrap: wrap; gap: 0 var(--s-4); margin: 0; padding: 0; list-style: none; }
+.navlist a { display: inline-flex; align-items: center; min-block-size: var(--target); }
+.navlist--crumbs li + li::before { content: "/"; content: "/" / ""; margin-inline-end: var(--s-4); color: var(--ink-soft); }
+.sample { padding: var(--s-4); background: var(--surface-2); border: var(--rule) solid var(--line-soft); border-radius: var(--r-2); }
+.sample .sample { background: var(--surface); }
+canvas { display: block; inline-size: 100%; max-inline-size: var(--text-measure); block-size: auto; color: var(--chart); background: var(--surface); border: var(--rule) solid var(--line); border-radius: var(--r-2); }
+dialog { inline-size: min(calc(100% - 2rem), 32rem); max-block-size: calc(100% - 2rem); padding: 0; color: var(--ink); background: var(--surface); border: var(--rule) solid var(--line); border-radius: var(--r-3); }
+dialog::backdrop { background: var(--scrim); }
+.dialog__body { padding: var(--s-5); }
+/* Scroll lock. While a dialog or popover is open, the page behind it cannot scroll.
+   The scrollbar space stays reserved so the layout does not jump, and scrolling inside the dialog never carries on to the page.
+   Each selector has its own rule so a browser that lacks one of them still applies the others. */
+html:has(dialog[open]) { overflow: hidden; scrollbar-gutter: stable; }
+html:has(.pop.is-open) { overflow: hidden; scrollbar-gutter: stable; }
+html:has(.pop:popover-open) { overflow: hidden; scrollbar-gutter: stable; }
+dialog, .pop { overscroll-behavior: contain; }
+/* Title on the left, close button on the right. Wraps on a narrow screen. */
+.dlg-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--s-3); }
+.dlg-head > :is(h2, h3, h4) { flex: 1 1 12rem; min-inline-size: 0; margin: 0; }
+
+/* Table extras and form extras */
+tfoot th, tfoot td { font-weight: 700; background: var(--surface-2); border-block-start: var(--rule) solid var(--line); }
+col.col-wide { inline-size: 50%; }
+fieldset > legend { padding: 0; margin-block-end: var(--s-1); }
+input[type="color"] { inline-size: 4.5rem; min-block-size: var(--target); padding: var(--s-1); cursor: pointer; background: var(--surface); border: var(--rule) solid var(--line); border-radius: var(--r-2); }
+input[type="range"] { inline-size: 100%; max-inline-size: var(--text-measure); min-block-size: var(--target); margin: 0; accent-color: var(--action); }
+::placeholder { color: var(--ink-soft); opacity: 1; }
+:is(input, select, textarea):disabled { cursor: not-allowed; color: var(--ink-soft); background: var(--surface-2); border-style: dashed; }
+output { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* Meter and bar chart (draw with inline SVG or HTML and these tokens) */
+.meter { inline-size: 100%; max-inline-size: var(--text-measure); block-size: 1rem; accent-color: var(--chart); }
+.chart text { fill: var(--ink); font-family: var(--font-body); font-size: 0.75rem; }
+.chart__axis { stroke: var(--line); stroke-width: 1; }
+.chart__bar { fill: var(--chart); stroke: var(--chart-line); stroke-width: 1; }
+
+/* Main navigation: a rounded track of pills. Each pill has an icon and a word. The current pill is filled, underlined and marked with aria-current,
+   so colour is never the only cue. Narrow screens show three pills per row with the icon above the word; wide screens show one row.
+   Set the number of pills with style="--tab-count: 4" on the list. Give each link a data-v and map it to an icon below.
+   If you use initViews(), data-v must match the view id. */
+:root {
+  --mask-nav-list: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2.8' y='4' width='3.8' height='16' rx='1'/%3E%3Crect x='8.6' y='4' width='3.8' height='16' rx='1'/%3E%3Cpath d='M14.8 6.4l3.4-.9 3.9 14.3-3.4.9z'/%3E%3C/svg%3E");
+  --mask-nav-saved: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 3.8h10v16.4l-5-3.6-5 3.6z'/%3E%3C/svg%3E");
+  --mask-nav-add: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
+  --mask-nav-tags: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.8 12.4V4.8h7.6l8.8 8.8-7.6 7.6z'/%3E%3Cpath d='M8 8.4v.2'/%3E%3C/svg%3E");
+  --mask-nav-block: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.2'/%3E%3Cpath d='M6.2 6.2l11.6 11.6'/%3E%3C/svg%3E");
+  --mask-nav-find: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.2'/%3E%3Cpath d='m15.2 15.2 5 5'/%3E%3C/svg%3E");
+}
+.tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-1); list-style: none; margin: 0; padding: var(--s-1); background: var(--surface-2); border: var(--rule) solid var(--line-soft); border-radius: 1.5rem; }
+.tabs li { display: flex; min-inline-size: 0; }
+.tabs a { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 0.125rem; min-block-size: 3.5rem; padding: var(--s-2); font-size: var(--t-sm); font-weight: 700; line-height: 1.2; text-align: center; text-decoration: none; color: var(--ink-soft); background: transparent; border: var(--rule) solid transparent; border-radius: 1.25rem; }
+.tabs a::before { content: ""; inline-size: 1.5rem; block-size: 1.5rem; flex: none; background: currentColor; mask: var(--nav-icon) center / contain no-repeat; -webkit-mask: var(--nav-icon) center / contain no-repeat; }
+.tabs a[data-v="list"] { --nav-icon: var(--mask-nav-list); }
+.tabs a[data-v="saved"] { --nav-icon: var(--mask-nav-saved); }
+.tabs a[data-v="add"] { --nav-icon: var(--mask-nav-add); }
+.tabs a[data-v="tags"] { --nav-icon: var(--mask-nav-tags); }
+.tabs a[data-v="block"] { --nav-icon: var(--mask-nav-block); }
+.tabs a[data-v="find"] { --nav-icon: var(--mask-nav-find); }
+.tabs a:hover { color: var(--ink); background: var(--surface); }
+.tabs a[aria-current="page"] { color: var(--on-action); background: var(--action); text-decoration: underline; text-decoration-thickness: 0.125rem; text-underline-offset: 0.25em; }
+.tabs a[aria-current="page"]:hover { background: var(--action-hover); }
+@media (prefers-reduced-motion: no-preference) { .tabs a { transition: background-color 0.18s ease, color 0.18s ease; } }
+@media (width >= 56rem) {
+  .tabs { grid-template-columns: repeat(var(--tab-count, 6), auto); inline-size: fit-content; }
+  .tabs a { flex-direction: row; gap: var(--s-2); min-block-size: var(--target); padding-inline: var(--s-4); font-size: var(--t-base); }
+}
+
+/* Panel extras: readable line length, a divided sub-section, empty lists hidden, list resets for cards */
+.panel > p, .panel .field { max-inline-size: var(--text-measure); }
+.panel > .sub { padding-block-start: var(--s-5); border-block-start: var(--rule) solid var(--line-soft); }
+.panel ul:empty, .panel ol:empty { display: none; }
+.panel nav .row { gap: var(--s-3) var(--s-4); }
+ul.cards, ol.cards { list-style: none; padding: 0; }
+/* Card titles that hold a link or button. The number badge gets an edge so it stays visible in dark mode, where it matches the card. */
+.card > h3 { align-items: flex-start; }
+.card > h3::before { border: var(--rule) solid var(--line); }
+.card > h3 .linklike { min-inline-size: 0; overflow-wrap: anywhere; font: inherit; line-height: 1.25; color: var(--link); text-align: start; padding-inline: 0; }
+
+/* Action buttons: equal-width buttons share one row where they fit and wrap together where they do not.
+   Keep the visible text short. Put the full name in aria-label, starting with the visible text. */
+.acts { display: grid; grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr)); gap: var(--s-2); inline-size: 100%; }
+.acts button { inline-size: 100%; padding: var(--s-2); font-size: var(--t-sm); line-height: 1.25; }
+.acts .badge { grid-column: 1 / -1; justify-self: start; }
+
+/* Row list: a name on the left and its controls beside it. Wraps on a narrow screen. */
+.tags { display: grid; gap: var(--s-3); list-style: none; padding: 0; }
+.tagrow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-4); padding: var(--s-3) var(--s-4); background: var(--surface-2); border: var(--rule) solid var(--line-soft); border-radius: var(--r-2); }
+.tagrow__name { flex: 1 1 10rem; min-inline-size: 0; font: 600 var(--t-md) / 1.2 var(--font-head); }
+.tagrow .field { grid-auto-flow: column; align-items: center; gap: var(--s-2); inline-size: auto; }
+.tagrow select { inline-size: auto; }
+
+/* Popover card: a small panel opened by a button with popovertarget. Closes on Escape or a tap outside.
+   Browsers without the popover API use the .is-open class, which bindPopoverFallback() sets. */
+.pop, .card > .pop { margin: auto; inline-size: min(92vw, 28rem); max-block-size: 80vh; overflow: auto; padding: var(--s-5); color: var(--ink); background: var(--surface); border: var(--rule) solid var(--line); border-radius: var(--r-3); }
+.pop::backdrop { background: var(--scrim); }
+.pop > * { margin: 0; }
+.pop > * + * { margin-block-start: var(--s-3); }
+@supports not selector(:popover-open) {
+  .pop { display: none; }
+  .pop.is-open { display: block; position: fixed; inset: 0; block-size: fit-content; z-index: 20; }
+}
+
+/* Footer */
+.site-footer { background: var(--brand); color: var(--on-brand); padding-block: var(--s-5); }
+.site-footer a { color: var(--on-brand); }
+.site-footer .hint { color: var(--on-brand-soft); }
+
+/* 5. Your page. Only what the kit does not already style.
+   Kit classes used here: site-header, stack-lg, stack, panel, cards and card (numbered result cards), stats, facts, chips,
+   note, badge, meter, tags, row, table-scroll, field, hint, checkline, linklike. */
+
+/* Page-only token: the height kept clear under the sticky progress bar when a link jumps to a heading. */
+:root { --sticky-h: 6rem; }
+html { scroll-padding-block-start: var(--sticky-h); }
+
+/* Header and layout */
+.motion-toggle { justify-self: start; }
+.motion-toggle[aria-pressed="true"] { color: var(--on-accent-2); background: var(--accent-2); border-color: var(--accent-2); }
+.motion-toggle[aria-pressed="true"]:hover { background: var(--accent-2-hover); border-color: var(--accent-2-hover); }
+.cards > * { min-inline-size: 0; }
+.summary { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* Deck box states */
+.deckbox:not(.is-loaded) .loaded-only { display: none; }
+.deckbox.is-loaded:not(.is-editing) #list-editor { display: none; }
+#deck-summary { color: var(--ink); font-size: var(--t-base); font-weight: 700; }
+.updated-deck__text { min-block-size: 14rem; }
+
+/* Summary tiles built from a description list: the kit makes dt bold and indents dd, so reset both. */
+.stat dt { font-weight: 400; }
+.stat dd { padding-inline-start: 0; }
 .chip--more { color: var(--ink-soft); border-style: dashed; }
+
+/* Match summary */
 .match { display: grid; gap: var(--s-2); }
-.match__pct { font: 600 var(--t-xl) / 1 var(--font-head); font-variant-numeric: tabular-nums; margin-inline-end: var(--s-2); }
-.match__meter { inline-size: 100%; max-inline-size: var(--text-measure); block-size: 1rem; }
+.match__pct { margin-inline-end: var(--s-2); font: 600 var(--t-xl) / 1 var(--font-head); font-variant-numeric: tabular-nums; }
 
 /* Charts */
-.metrics__body { display: grid; gap: var(--s-4); padding-block: var(--s-3); }
-.metrics__body > * { min-inline-size: 0; }
-.metrics__charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: var(--s-4) var(--s-5); }
-.metrics__chart { display: grid; gap: var(--s-2); align-content: start; min-inline-size: 0; }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: var(--s-4) var(--s-5); }
+.charts > div { display: grid; gap: var(--s-2); align-content: start; min-inline-size: 0; }
 .chart { inline-size: 100%; max-inline-size: 36rem; min-inline-size: 0; }
 .chart svg { display: block; inline-size: 100%; block-size: auto; max-block-size: 24rem; overflow: visible; }
-.chart text { fill: var(--ink); font-family: var(--font-body); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
-.chart__axis { stroke: var(--line); stroke-width: 1.5; }
-.chart__bar { fill: var(--chart); stroke: var(--ink); stroke-width: 1.5; }
+.chart text { font-size: 0.875rem; font-variant-numeric: tabular-nums; }
 .chart__line { fill: none; stroke: var(--chart-line); stroke-width: 3; stroke-linejoin: round; }
 .chart__dot { fill: var(--surface); stroke: var(--chart-line); stroke-width: 3; }
 .share { display: inline-flex; align-items: center; gap: var(--s-2); }
 .share__track { display: inline-block; inline-size: 6rem; block-size: 0.875rem; background: var(--surface); border: var(--rule) solid var(--line); border-radius: 999px; overflow: hidden; }
 .share__bar { display: block; block-size: 100%; background: var(--chart); border-inline-end: 0.125rem solid var(--ink); }
 
-/* Swap rows: each card carries its role as shape (icon), word (tag) and colour */
-.metrics__list { list-style: none; padding: 0; display: grid; gap: var(--s-3); }
-.metrics__swap { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: var(--s-3); padding: var(--s-3); background: var(--surface); border: var(--rule) solid var(--line-soft); border-radius: var(--r-3); }
-.metrics__swap > p, .metrics__swap > .metrics__try { grid-column: 1 / -1; margin: 0; }
-.metrics__try { justify-self: start; }
-.metrics__card { --role-ink: var(--info-ink); --role-mark: var(--info-mark); --role-tint: var(--info-tint); --role-icon: var(--mask-info);
+/* Swap rows: each card carries its role as shape (badge icon), word (badge text) and colour. */
+.swap { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: var(--s-3); padding: var(--s-3); background: var(--surface); border: var(--rule) solid var(--line-soft); border-radius: var(--r-3); }
+.swap > p, .swap > .swap__try { grid-column: 1 / -1; margin: 0; }
+.swap__try { justify-self: start; }
+.swap__card {
+  --role-ink: var(--info-ink); --role-mark: var(--info-mark); --role-tint: var(--info-tint);
   display: flex; flex-wrap: wrap; align-content: start; align-items: center; gap: var(--s-1) var(--s-3); min-inline-size: 0; overflow-wrap: anywhere;
-  padding: var(--s-3); color: var(--role-ink); background: var(--role-tint); border: var(--rule) solid var(--role-mark); border-inline-start-width: 0.5rem; border-radius: var(--r-2); }
-.metrics__card[data-role="replace"] { --role-ink: var(--warn-ink); --role-mark: var(--warn-mark); --role-tint: var(--warn-tint); --role-icon: var(--mask-warn); }
-.metrics__card[data-role="with"] { --role-ink: var(--ok-ink); --role-mark: var(--ok-mark); --role-tint: var(--ok-tint); --role-icon: var(--mask-ok); }
-.metrics__card.has-thumb { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; }
-.metrics__card-text { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-1) var(--s-3); min-inline-size: 0; }
-.metrics__card .hint { flex-basis: 100%; margin: 0; color: var(--role-ink); }
-.metrics__tag { display: inline-flex; align-items: center; gap: var(--s-1); min-block-size: 1.5rem; padding: 0 var(--s-2); color: var(--role-ink); background: var(--surface); border: var(--rule) solid currentColor; border-radius: var(--r-2); font-size: var(--t-sm); font-weight: 700; }
-.metrics__tag::before { content: ""; inline-size: 1rem; block-size: 1rem; background: currentColor; mask: var(--role-icon) center / contain no-repeat; -webkit-mask: var(--role-icon) center / contain no-repeat; }
-.metrics__thumb { order: -1; inline-size: clamp(3rem, 9vw, 4.25rem); aspect-ratio: 488 / 680; object-fit: cover; border-radius: 0.25rem; border: 1px solid var(--role-mark); background: var(--surface); }
-.card__cost { color: var(--role-ink, var(--ink-soft)); font-size: var(--t-sm); }
-.validation { display: grid; gap: var(--s-3); }
-.validation__list { list-style: none; padding: 0; display: grid; gap: var(--s-3); }
-.validation__item, .validation__ok { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-3); align-items: start; padding: var(--s-3) var(--s-4); border-radius: var(--r-2); border: var(--rule) solid var(--warn-mark); border-inline-start-width: 0.5rem; background: var(--warn-tint); color: var(--warn-ink); overflow-wrap: anywhere; }
-.validation__item::before, .validation__ok::before { content: ""; inline-size: 1.5rem; block-size: 1.5rem; margin-block-start: 0.1rem; background: currentColor; mask: var(--mask-warn) center / contain no-repeat; -webkit-mask: var(--mask-warn) center / contain no-repeat; }
-.validation__item > * { grid-column: 2; }
-.validation__ok { background: var(--ok-tint); border-color: var(--ok-mark); color: var(--ok-ink); font-weight: 700; }
-.validation__ok::before { mask-image: var(--mask-ok); -webkit-mask-image: var(--mask-ok); }
-.updated-deck__text { min-block-size: 14rem; }
-.deck__actions { display: flex; flex-wrap: wrap; gap: var(--s-3); }
-.fold { border-block-start: var(--rule) solid var(--line-soft); }
-.try-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-4); padding: var(--s-3) var(--s-4); background: var(--ok-tint); border: var(--rule) solid var(--ok-mark); border-inline-start-width: 0.5rem; border-radius: var(--r-2); }
-.try-bar p { margin: 0; }
-.try-bar[hidden], .next-step[hidden] { display: none; }
-.next-step { grid-template-columns: auto minmax(0, 1fr); }
-
-/* Deck box states */
-.deckbox:not(.is-loaded) .loaded-only { display: none; }
-#list-editor { display: grid; gap: var(--s-4); }
-.deckbox > * { min-inline-size: 0; margin-block: 0; }
-.deckbox { display: grid; gap: var(--s-4); }
-#deck-summary { font-weight: 700; color: var(--ink); font-size: var(--t-base); }
-
-/* 7. User preferences and assistive modes */
-@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
-@media (forced-colors: active) {
-  /* Mask icons are painted with background-color, which forced colours overrides: pin them to system ink. */
-  .note::before, [role="alert"]:not([hidden])::before, .validation__item::before, .validation__ok::before,
-  summary::before, .metrics__tag::before, .journey__state::before { forced-color-adjust: none; background-color: CanvasText; }
-  .journey li[aria-current="step"] { border: 0.25rem solid Highlight; }
-  .mcard > h3::before { border: var(--rule) solid CanvasText; }
-  .mcard, .stat, .chip, .metrics__card, .metrics__swap { border-color: CanvasText; }
-  .chart text { fill: CanvasText; }
-  .chart__axis, .chart__line, .chart__dot, .chart__bar { stroke: CanvasText; }
-  .chart__bar, .share__bar { forced-color-adjust: none; fill: Highlight; background: Highlight; }
-  .note, .try-bar, .validation__item, .validation__ok { border-inline-start-width: 0.5rem; }
+  padding: var(--s-3); color: var(--role-ink); background: var(--role-tint); border: var(--rule) solid var(--role-mark); border-inline-start-width: 0.5rem; border-radius: var(--r-2);
 }
-@media print { .site-header, .site-footer, .journey, .pager, .skip-link { display: none; } body { background: #fff; } }
+.swap__card[data-role="replace"] { --role-ink: var(--warn-ink); --role-mark: var(--warn-mark); --role-tint: var(--warn-tint); }
+.swap__card[data-role="with"] { --role-ink: var(--ok-ink); --role-mark: var(--ok-mark); --role-tint: var(--ok-tint); }
+.swap__card.has-thumb { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+.swap__card-text { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-1) var(--s-3); min-inline-size: 0; }
+.swap__card .hint { flex-basis: 100%; margin: 0; color: var(--role-ink); }
+.swap__name { font-weight: 600; overflow-wrap: anywhere; }
+.swap__cost { color: var(--role-ink, var(--ink-soft)); font-size: var(--t-sm); }
+.swap__thumb { order: -1; inline-size: clamp(3rem, 9vw, 4.25rem); aspect-ratio: 488 / 680; object-fit: cover; border-radius: 0.25rem; border: 1px solid var(--role-mark); background: var(--surface); }
 
-/* 8. stepper, metrics layout, decoration, validation */
-.blobs { display: none; }
-.lede { margin: var(--s-2) 0 0; color: var(--ink-soft); max-inline-size: var(--text-measure, 40rem); }
-h2.section-title { margin: 0; }
-summary > h2 { margin: 0; font-size: var(--t-lg); }
-.deck__summary { margin: 0; font-variant-numeric: tabular-nums; font-size: var(--t-base); color: var(--ink); }
-.maintenance { margin-block-start: var(--s-2); }
-.motion-toggle { margin-block-start: var(--s-3); }
-.motion-toggle[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
-.metrics { min-inline-size: 0; }
-@media (prefers-reduced-motion: no-preference) {
-  html[data-motion="on"] .bloom-item { animation: bloom 0.4s ease-out backwards; animation-delay: calc(var(--i, 0) * 40ms); }
-}
-@keyframes bloom { from { opacity: 0; transform: translateY(0.5rem); } }
-/* 8b. Sticky progress header with viscous fill.
-   The liquid is drawn by real child elements (.journey__fill, .journey__wave) sized with
-   inline-size and inset-inline-start, so the fill animates in every browser: no @property
-   or custom-property transitions are involved. */
+/* Progress bar: sticky, with a liquid fill drawn by real child elements (.journey__fill, .journey__wave) sized with
+   inline-size and inset-inline-start, so the fill animates in every browser: no @property or custom-property transitions. */
 .journey-slot { position: sticky; inset-block-start: 0; z-index: 10; margin-block: var(--s-4); padding: calc(var(--s-2) + env(safe-area-inset-top, 0px)) 0 var(--s-2); background: var(--paper); border-block-end: var(--rule) solid var(--line-soft); }
 .journey { container-type: inline-size; --pill-h: 3.75rem; --pill-pad: var(--s-2); }
+.journey ol { list-style: none; padding: 0; display: grid; gap: var(--s-1); grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .journey li {
   --fill-color: var(--surface-2);
 
@@ -466,15 +554,21 @@ summary > h2 { margin: 0; font-size: var(--t-lg); }
 .journey li[data-level="full"] .journey__wave { display: none; }
 .journey li[data-state="done"] { --fill-color: var(--ok-tint); }
 .journey li[data-state="done"][data-level="full"] { color: var(--ok-ink); border-color: var(--ok-mark); }
-.journey li[aria-current="step"] { --fill-color: color-mix(in srgb, var(--action) 22%, var(--surface)); color: var(--ink); border: 0.1875rem solid var(--brand); }
+.journey li[aria-current="step"] { --fill-color: color-mix(in srgb, var(--action) 22%, var(--surface)); color: var(--ink); border: 0.1875rem solid var(--action); }
 .journey li[data-phase="error"] { --fill-color: var(--problem-tint); color: var(--problem-ink); border-color: var(--problem-mark); }
 .journey a { display: flex; flex-direction: column; align-items: center; justify-content: center; align-self: stretch; inline-size: 100%; min-inline-size: 0; padding: var(--s-1) var(--pill-pad); color: inherit; text-decoration: none; }
 .journey a:focus-visible { outline-offset: -0.375rem; }
 .journey li:has(> a) { padding: 0; }
 .step-text { display: flex; flex-direction: column; align-items: center; justify-content: center; inline-size: 100%; min-inline-size: 0; }
 .journey__pct { font-variant-numeric: tabular-nums; }
-/* Narrow screens: same pill height in every state, smaller type and icon, and the long
-   "Analysing…" word dropped visually (kept for assistive tech) so the % always fits. */
+/* Every pill states its state in words plus an icon, so colour is never the only cue. */
+.journey__state { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; text-align: center; gap: 0 var(--s-1); max-inline-size: 100%; min-inline-size: 0; font-size: var(--t-sm); font-weight: 400; line-height: 1.2; overflow-wrap: anywhere; }
+.journey__state::before { content: ""; display: none; inline-size: 1rem; block-size: 1rem; flex: none; background: currentColor; mask: center / contain no-repeat; -webkit-mask: center / contain no-repeat; }
+.journey li[data-state="done"] .journey__state::before { display: block; mask-image: var(--mask-ok); -webkit-mask-image: var(--mask-ok); }
+.journey li[data-state="current"] .journey__state::before { display: block; mask-image: var(--mask-chev); -webkit-mask-image: var(--mask-chev); }
+.journey li[data-phase="error"] .journey__state::before { display: block; mask-image: var(--mask-problem); -webkit-mask-image: var(--mask-problem); }
+/* Narrow screens: same pill height in every state, smaller type and icon, and the long "Analysing…" word dropped visually
+   (kept for assistive tech) so the percentage always fits. */
 @container (max-width: 34rem) {
   .journey { --pill-h: 4.75rem; --pill-pad: 0.125rem; }
   .journey ol { gap: 0.1875rem; }
@@ -487,26 +581,44 @@ summary > h2 { margin: 0; font-size: var(--t-lg); }
   .journey li { font-size: 0.75rem; }
   .journey__state { font-size: 0.6875rem; }
 }
-.journey__restart { margin-block-end: var(--s-3); min-block-size: var(--target); }
+
+/* Motion: runs only when the system allows it and the page toggle is not paused (data-motion="on"). */
 @media (prefers-reduced-motion: no-preference) {
+  html[data-motion="on"] .bloom-item { animation: bloom 0.4s ease-out backwards; animation-delay: calc(var(--i, 0) * 40ms); }
   html[data-motion="on"] .journey__fill { transition: transform var(--fill-ms, 1.8s) cubic-bezier(0.22, 0.61, 0.2, 1), background-color .6s; }
   html[data-motion="on"] .journey__wave { transition: transform var(--fill-ms, 1.8s) cubic-bezier(0.22, 0.61, 0.2, 1), background-color .6s; animation: flow 3.6s linear infinite; }
 }
+@keyframes bloom { from { opacity: 0; transform: translateY(0.5rem); } }
 @keyframes flow { to { mask-position: 0 3.5rem; -webkit-mask-position: 0 3.5rem; } }
 
-/* 9. Higher-specificity rules last */
-.panel > h2 + *, .panel > h3 + * { margin-block-start: var(--s-3); }
-.note p + p { margin-block-start: var(--s-2); }
-.deckbox.is-loaded:not(.is-editing) #list-editor { display: none; }
-
-/* 10. Static about section (pre-rendered, crawlable without JS) */
-.about { display: grid; gap: var(--s-3); margin-block-start: var(--s-7); max-inline-size: var(--text-measure); }
-.about ul { padding-inline-start: var(--s-5); }
+/* 6. User preferences and assistive modes */
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+@media (forced-colors: active) {
+  /* Mask icons are painted with background-color, which forced colours overrides: pin them to system ink. */
+  .note::before, [role="alert"]:not([hidden])::before, .badge::before, summary::before, .journey__state::before { forced-color-adjust: none; background-color: CanvasText; }
+  .card > h3::before { border: var(--rule) solid CanvasText; }
+  .card, .stat, .chip, .panel, .swap, .swap__card { border-color: CanvasText; }
+  .journey li[aria-current="step"] { border: 0.25rem solid Highlight; }
+  .tabs, .tabs a, .tagrow, dialog, .pop { border-color: CanvasText; }
+  .tabs a::before { forced-color-adjust: none; background-color: CanvasText; }
+  .tabs a[aria-current="page"] { border-color: Highlight; text-decoration: underline; }
+  .chart text { fill: CanvasText; }
+  .chart__axis, .chart__bar, .chart__line, .chart__dot { stroke: CanvasText; }
+  .chart__bar, .share__bar { forced-color-adjust: none; fill: Highlight; background: Highlight; }
+  .note { border-inline-start-width: 0.5rem; }
+}
+@media print {
+  :root { color-scheme: light; }
+  .site-footer, .skip-link, .no-print, .journey-slot { display: none; }
+  body { background: #fff; }
+}
         </style>
     </head>
     <body>
-        <main>
-            <header>
+        <a class="skip-link" href="#main">Skip to main content</a>
+
+        <main id="main" tabindex="-1">
+            <header class="site-header">
                 <h1>Modicarta</h1>
                 <p class="lede">Paste a Standard decklist. See how it is built, then try changes one at a time.</p>
                 <button
@@ -519,333 +631,343 @@ summary > h2 { margin: 0; font-size: var(--t-lg); }
             <noscript>
                 <p role="alert">Modicarta needs JavaScript to analyse a decklist. Enable it and reload.</p>
             </noscript>
-            <div class="journey-slot">
-                <nav class="journey" aria-label="Your progress">
-                    <ol>
-                        <li><span class="journey__fill" aria-hidden="true"></span><span class="journey__wave" aria-hidden="true"></span>Add deck</li>
-                        <li><span class="journey__fill" aria-hidden="true"></span><span class="journey__wave" aria-hidden="true"></span><span class="step-text"><span id="step-analyse">Analyse</span></span></li>
-                        <li><span class="journey__fill" aria-hidden="true"></span><span class="journey__wave" aria-hidden="true"></span><a href="#metrics-output">Read results</a></li>
-                        <li><span class="journey__fill" aria-hidden="true"></span><span class="journey__wave" aria-hidden="true"></span><span id="step-last">Refine</span></li>
-                    </ol></nav></div>
-            <button
-                id="start-over"
-                type="button"
-                class="secondary journey__restart"
-                hidden
-            >Start over</button>
-
-            <section class="deckbox" aria-labelledby="deck-heading">
-                <h2 class="section-title" id="deck-heading">Deck</h2>
-                <div id="list-editor">
-                    <div class="field">
-                        <label for="deck-name">Deck name</label>
-                        <input
-                            id="deck-name"
-                            type="text"
-                            maxlength="40"
-                            autocomplete="off"
-                            value="My deck"
-                        >
-                    </div>
-                    <div class="field">
-                        <label for="deck-import">Decklist</label>
-                        <textarea
-                            id="deck-import"
-                            spellcheck="false"
-                            aria-describedby="import-hint"
-                            placeholder="2 Dread Summons&#10;4 Opt&#10;24 Island"
-                        ></textarea>
-                        <span id="import-hint" class="hint">One card per line, such as "2 Dread Summons". Double-faced cards can use " // ". Lines after "Sideboard" are ignored. Applied metric changes are written back here.</span>
-                    </div>
-                    <div class="deck__actions">
-                        <button id="import-text" type="button">Load deck</button>
-                        <button
-                            id="import-clipboard"
-                            type="button"
-                            class="secondary"
-                        >Load from clipboard</button>
-                    </div>
-                </div>
-                <div class="deck__actions loaded-only">
-                    <button
-                        id="edit-list"
-                        type="button"
-                        class="secondary"
-                        aria-expanded="false"
-                        aria-controls="list-editor"
-                    >Edit list</button>
-                    <button
-                        id="deck-copy"
-                        type="button"
-                        class="secondary"
-                    >Copy decklist</button>
-                    <button
-                        id="deck-pdf"
-                        type="button"
-                        class="secondary"
-                    >Export deck PDF</button>
-                </div>
-                <label class="checkline loaded-only" for="pdf-images">
-                    <input
-                        type="checkbox"
-                        id="pdf-images"
-                        checked
-                    >
-                    Include card images in PDF exports
-                </label>
-                <p
-                    id="deck-summary"
-                    class="deck__summary"
-                    role="status"
-                ></p>
-                <p id="import-status" role="status"></p>
-                <p
-                    id="import-error"
-                    role="alert"
+            <div class="stack-lg">
+                <div class="journey-slot">
+                    <nav class="journey" aria-label="Your progress">
+                        <ol>
+                            <li><span class="journey__fill" aria-hidden="true"></span><span class="journey__wave" aria-hidden="true"></span>Add deck</li>
+                            <li><span class="journey__fill" aria-hidden="true"></span><span class="journey__wave" aria-hidden="true"></span><span class="step-text"><span id="step-analyse">Analyse</span></span></li>
+                            <li><span class="journey__fill" aria-hidden="true"></span><span class="journey__wave" aria-hidden="true"></span><a href="#metrics-output">Read results</a></li>
+                            <li><span class="journey__fill" aria-hidden="true"></span><span class="journey__wave" aria-hidden="true"></span><span id="step-last">Refine</span></li>
+                        </ol></nav></div>
+                <button
+                    id="start-over"
+                    type="button"
+                    class="secondary"
                     hidden
-                ></p>
-                <p id="export-status" role="status"></p>
-                <p
-                    id="export-error"
-                    role="alert"
-                    hidden
-                ></p>
-            </section>
+                >Start over</button>
 
-            <div class="deck">
-                <details
-                    class="metrics"
-                    id="metrics"
-                    open
-                >
-                    <summary>
-                        <h2 id="metrics-heading">Deck metrics</h2>
-                    </summary>
-                    <div class="metrics__body">
-                        <p
-                            id="corpus-banner"
-                            class="hint"
-                            role="status"
-                        ></p>
-                        <div class="deck__actions">
-                            <button id="metrics-run" type="button">Analyse deck</button>
+                <section class="panel deckbox" aria-labelledby="deck-heading">
+                    <h2 id="deck-heading">Deck</h2>
+                    <div id="list-editor" class="stack">
+                        <div class="field">
+                            <label for="deck-name">Deck name</label>
+                            <input
+                                id="deck-name"
+                                type="text"
+                                maxlength="40"
+                                autocomplete="off"
+                                value="My deck"
+                            >
+                        </div>
+                        <div class="field">
+                            <label for="deck-import">Decklist</label>
+                            <textarea
+                                id="deck-import"
+                                spellcheck="false"
+                                aria-describedby="import-hint"
+                                placeholder="2 Dread Summons&#10;4 Opt&#10;24 Island"
+                            ></textarea>
+                            <span id="import-hint" class="hint">One card per line, such as "2 Dread Summons". Double-faced cards can use " // ". Lines after "Sideboard" are ignored. Applied metric changes are written back here.</span>
+                        </div>
+                        <div class="row">
+                            <button id="import-text" type="button">Load deck</button>
                             <button
-                                id="metrics-export"
+                                id="import-clipboard"
                                 type="button"
                                 class="secondary"
-                            >Export deck and analysis PDF</button>
+                            >Load from clipboard</button>
                         </div>
-                        <p id="metrics-status" role="status"></p>
-                        <p
-                            id="metrics-stale"
-                            class="hint"
-                            role="status"
-                        ></p>
-                        <p
-                            id="metrics-error"
-                            role="alert"
-                            hidden
-                        ></p>
-                        <div id="metrics-output" hidden>
+                    </div>
+                    <div class="row loaded-only">
+                        <button
+                            id="edit-list"
+                            type="button"
+                            class="secondary"
+                            aria-expanded="false"
+                            aria-controls="list-editor"
+                        >Edit list</button>
+                        <button
+                            id="deck-copy"
+                            type="button"
+                            class="secondary"
+                        >Copy decklist</button>
+                        <button
+                            id="deck-pdf"
+                            type="button"
+                            class="secondary"
+                        >Export deck PDF</button>
+                    </div>
+                    <label class="checkline loaded-only" for="pdf-images">
+                        <input
+                            type="checkbox"
+                            id="pdf-images"
+                            checked
+                        >
+                        Include card images in PDF exports
+                    </label>
+                    <p
+                        id="deck-summary"
+                        class="summary"
+                        role="status"
+                    ></p>
+                    <p id="import-status" role="status"></p>
+                    <p
+                        id="import-error"
+                        role="alert"
+                        hidden
+                    ></p>
+                    <p id="export-status" role="status"></p>
+                    <p
+                        id="export-error"
+                        role="alert"
+                        hidden
+                    ></p>
+                </section>
+
+                <div id="results">
+                    <details id="metrics" open>
+                        <summary>
+                            <h2 id="metrics-heading">Deck metrics</h2>
+                        </summary>
+                        <div class="stack">
                             <p
-                                id="next-step"
-                                class="next-step"
+                                id="corpus-banner"
+                                class="hint"
+                                role="status"
+                            ></p>
+                            <div class="row">
+                                <button id="metrics-run" type="button">Analyse deck</button>
+                                <button
+                                    id="metrics-export"
+                                    type="button"
+                                    class="secondary"
+                                >Export deck and analysis PDF</button>
+                            </div>
+                            <p id="metrics-status" role="status"></p>
+                            <p
+                                id="metrics-stale"
+                                class="hint"
+                                role="status"
+                            ></p>
+                            <p
+                                id="metrics-error"
+                                role="alert"
                                 hidden
                             ></p>
                             <div
-                                id="try-bar"
-                                class="try-bar"
-                                role="status"
-                                hidden
-                            ></div>
-                            <p id="metrics-overview" class="deck__summary"></p>
-
-                            <section class="mcard" aria-labelledby="sec-curve">
-                                <h3 id="sec-curve">Mana curve</h3>
-                                <div class="metrics__charts">
-                                    <div class="metrics__chart">
-                                        <h4>Cards by mana value</h4>
-                                        <div id="chart-bars" class="chart"></div>
-                                    </div>
-                                    <div class="metrics__chart">
-                                        <h4>Mana ramp</h4>
-                                        <p class="hint">Each point counts the non-land cards at that mana value or lower.</p>
-                                        <div id="chart-ramp" class="chart"></div>
-                                    </div>
-                                </div>
-                                <details class="fold">
-                                    <summary>Chart data</summary>
-                                    <div id="metrics-data"></div>
-                                </details>
-                            </section>
-
-                            <section class="mcard" aria-labelledby="sec-synergy">
-                                <h3 id="sec-synergy">Synergy</h3>
-                                <div id="synergy-overall" class="mpanel"></div>
-                                <details class="fold">
-                                    <summary>Synergy breakdown by archetype</summary>
-                                    <div id="synergy-table"></div>
-                                </details>
-                            </section>
-
-                            <section class="mcard" aria-labelledby="sec-meta">
-                                <h3 id="sec-meta">Metagame match</h3>
-                                <div id="meta-panel" class="mpanel"></div>
-                            </section>
-
-                            <section class="mcard" aria-labelledby="sec-engine">
-                                <h3 id="sec-engine">Card advantage and win conditions</h3>
-                                <div id="engine-panel" class="mpanel"></div>
-                            </section>
-
-                            <section class="mcard" aria-labelledby="sec-mana">
-                                <h3 id="sec-mana">Colored mana</h3>
-                                <div id="mana-panel" class="mpanel"></div>
-                            </section>
-
-                            <section class="mcard" aria-labelledby="validation-heading">
-                                <h3 id="validation-heading">Competitive validation</h3>
-                                <div
-                                    id="validation-panel"
-                                    class="validation"
-                                    role="group"
-                                    aria-labelledby="validation-heading"
-                                ></div>
-                            </section>
-
-                            <section
-                                id="lift-section"
-                                class="mcard"
-                                aria-labelledby="lift-heading"
+                                id="metrics-output"
+                                class="cards"
                                 hidden
                             >
-                                <h3 id="lift-heading">Swaps to reach a metagame match</h3>
                                 <p
-                                    id="lift-summary"
-                                    class="hint"
-                                    role="status"
-                                ></p>
-                                <ul
-                                    id="lift-list"
-                                    class="metrics__list"
-                                    aria-labelledby="lift-heading"
-                                ></ul>
-                            </section>
-
-                            <section class="mcard" aria-labelledby="sec-replace">
-                                <h3 id="sec-replace">Cards to consider replacing</h3>
-                                <details class="fold">
-                                    <summary>How these cards are chosen</summary>
-                                    <p class="hint">Flagged cards either fit neither of the deck's two main themes, or are thin 1-of and 2-of cards behind the Singleton Syndrome warning, or are the weakest cards to cut when the deck is short of removal. Their copies are moved onto on-theme cards you already run, closest mana value first, so the deck builds towards 4-ofs. Only when those have no room is a new Standard-legal card in the deck's colours suggested, found by theme and listed in name order.</p>
-                                </details>
-                                <p id="replace-basis" class="hint"></p>
-                                <ul id="replace-list" class="metrics__list"></ul>
-                                <div class="deck__actions">
-                                    <button
-                                        id="metrics-apply"
-                                        type="button"
-                                        hidden
-                                    >Apply all suggested changes</button>
-                                </div>
-                                <p
-                                    id="metrics-apply-hint"
-                                    class="hint"
+                                    id="next-step"
+                                    class="note"
                                     hidden
                                 ></p>
-                                <div id="updated-deck" hidden>
-                                    <label for="updated-deck-text">Updated decklist</label>
-                                    <textarea
-                                        id="updated-deck-text"
-                                        class="updated-deck__text"
-                                        readonly
-                                        spellcheck="false"
-                                        aria-describedby="updated-deck-hint"
-                                    ></textarea>
-                                    <p id="updated-deck-hint" class="hint">The deck after the applied changes, one card per line. Sideboard lines from the import are not included.</p>
-                                    <h4 id="updated-deck-changes-heading">Changes applied</h4>
-                                    <ul id="updated-deck-changes" aria-labelledby="updated-deck-changes-heading"></ul>
-                                    <div class="deck__actions">
+                                <div
+                                    id="try-bar"
+                                    class="note note--ok"
+                                    hidden
+                                ></div>
+                                <p id="metrics-overview" class="summary"></p>
+
+                                <section class="card" aria-labelledby="sec-curve">
+                                    <h3 id="sec-curve">Mana curve</h3>
+                                    <div class="charts">
+                                        <div>
+                                            <h4>Cards by mana value</h4>
+                                            <div id="chart-bars" class="chart"></div>
+                                        </div>
+                                        <div>
+                                            <h4>Mana ramp</h4>
+                                            <p class="hint">Each point counts the non-land cards at that mana value or lower.</p>
+                                            <div id="chart-ramp" class="chart"></div>
+                                        </div>
+                                    </div>
+                                    <details>
+                                        <summary>Chart data</summary>
+                                        <div id="metrics-data"></div>
+                                    </details>
+                                </section>
+
+                                <section class="card" aria-labelledby="sec-synergy">
+                                    <h3 id="sec-synergy">Synergy</h3>
+                                    <div id="synergy-overall" class="stack"></div>
+                                    <details>
+                                        <summary>Synergy breakdown by archetype</summary>
+                                        <div id="synergy-table"></div>
+                                    </details>
+                                </section>
+
+                                <section class="card" aria-labelledby="sec-meta">
+                                    <h3 id="sec-meta">Metagame match</h3>
+                                    <div id="meta-panel" class="stack"></div>
+                                </section>
+
+                                <section class="card" aria-labelledby="sec-engine">
+                                    <h3 id="sec-engine">Card advantage and win conditions</h3>
+                                    <div id="engine-panel" class="stack"></div>
+                                </section>
+
+                                <section class="card" aria-labelledby="sec-mana">
+                                    <h3 id="sec-mana">Colored mana</h3>
+                                    <div id="mana-panel" class="stack"></div>
+                                </section>
+
+                                <section class="card" aria-labelledby="validation-heading">
+                                    <h3 id="validation-heading">Competitive validation</h3>
+                                    <div
+                                        id="validation-panel"
+                                        class="stack"
+                                        role="group"
+                                        aria-labelledby="validation-heading"
+                                    ></div>
+                                </section>
+
+                                <section
+                                    id="lift-section"
+                                    class="card"
+                                    aria-labelledby="lift-heading"
+                                    hidden
+                                >
+                                    <h3 id="lift-heading">Swaps to reach a metagame match</h3>
+                                    <p
+                                        id="lift-summary"
+                                        class="hint"
+                                        role="status"
+                                    ></p>
+                                    <ul
+                                        id="lift-list"
+                                        class="tags"
+                                        aria-labelledby="lift-heading"
+                                    ></ul>
+                                </section>
+
+                                <section class="card" aria-labelledby="sec-replace">
+                                    <h3 id="sec-replace">Cards to consider replacing</h3>
+                                    <details>
+                                        <summary>How these cards are chosen</summary>
+                                        <p class="hint">Flagged cards either fit neither of the deck's two main themes, or are thin 1-of and 2-of cards behind the Singleton Syndrome warning, or are the weakest cards to cut when the deck is short of removal. Their copies are moved onto on-theme cards you already run, closest mana value first, so the deck builds towards 4-ofs. Only when those have no room is a new Standard-legal card in the deck's colours suggested, found by theme and listed in name order.</p>
+                                    </details>
+                                    <p id="replace-basis" class="hint"></p>
+                                    <ul id="replace-list" class="tags"></ul>
+                                    <div class="row">
                                         <button
-                                            id="updated-deck-copy"
+                                            id="metrics-apply"
+                                            type="button"
+                                            hidden
+                                        >Apply all suggested changes</button>
+                                    </div>
+                                    <p
+                                        id="metrics-apply-hint"
+                                        class="hint"
+                                        hidden
+                                    ></p>
+                                    <div
+                                        id="updated-deck"
+                                        class="stack"
+                                        hidden
+                                    >
+                                        <div class="field">
+                                            <label for="updated-deck-text">Updated decklist</label>
+                                            <textarea
+                                                id="updated-deck-text"
+                                                class="updated-deck__text"
+                                                readonly
+                                                spellcheck="false"
+                                                aria-describedby="updated-deck-hint"
+                                            ></textarea>
+                                            <span id="updated-deck-hint" class="hint">The deck after the applied changes, one card per line. Sideboard lines from the import are not included.</span>
+                                        </div>
+                                        <h4 id="updated-deck-changes-heading">Changes applied</h4>
+                                        <ul id="updated-deck-changes" aria-labelledby="updated-deck-changes-heading"></ul>
+                                        <div class="row">
+                                            <button
+                                                id="updated-deck-copy"
+                                                type="button"
+                                                class="secondary"
+                                            >Copy updated decklist</button>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <details id="tools" class="hint">
+                                <summary>Data and tools</summary>
+                                <p class="hint">Charts use the active deck and leave out lands. Themes use Scryfall Oracle tags, so they need an internet connection. Archetype matching, staples and replacements use the metagame data built into this file (MTGGoldfish Standard card breakdowns, see the banner for coverage and age).</p>
+                                <details class="hint">
+                                    <summary>Build or replace the metagame corpus</summary>
+                                    <p class="hint">Paste winning Standard lists (from magic.gg, MTGGoldfish or MTGTop8 exports), one after another. Start each list with a line like <code># Dimir Mill</code> (optionally <code># Dimir Mill | event | date</code>); sideboards are ignored. Or pick several .txt files named like <code>Dimir Mill__event__date.txt</code>, or a corpus .json. The result is saved in this browser and replaces the built-in corpus until cleared.</p>
+                                    <div class="field">
+                                        <label for="corpus-paste">Pasted lists</label>
+                                        <textarea
+                                            id="corpus-paste"
+                                            rows="6"
+                                            spellcheck="false"
+                                            placeholder="# Dimir Mill&#10;4 Consult the Star Charts&#10;..."
+                                        ></textarea>
+                                    </div>
+                                    <div class="row">
+                                        <button
+                                            id="corpus-build"
                                             type="button"
                                             class="secondary"
-                                        >Copy updated decklist</button>
+                                        >Build corpus from pasted lists</button>
+                                        <button
+                                            id="corpus-export"
+                                            type="button"
+                                            class="secondary"
+                                        >Export corpus JSON</button>
+                                        <button
+                                            id="corpus-clear"
+                                            type="button"
+                                            class="secondary"
+                                        >Clear saved corpus (back to built-in)</button>
                                     </div>
+                                    <div class="field">
+                                        <label for="corpus-file">Or pick files</label>
+                                        <input
+                                            type="file"
+                                            id="corpus-file"
+                                            accept=".txt,.json,application/json,text/plain"
+                                            multiple
+                                        >
+                                    </div>
+                                </details>
+                                <div>
+                                    <div class="row">
+                                        <button
+                                            id="metrics-selftest"
+                                            type="button"
+                                            class="secondary"
+                                        >Run self-test</button>
+                                        <button
+                                            id="metrics-clearcache"
+                                            type="button"
+                                            class="secondary"
+                                        >Clear cached card data</button>
+                                    </div>
+                                    <p id="selftest-status" role="status"></p>
                                 </div>
-                            </section>
-                        </div>
-                        <details class="hint maintenance" id="tools">
-                            <summary>Data and tools</summary>
-                            <p class="hint">Charts use the active deck and leave out lands. Themes use Scryfall Oracle tags, so they need an internet connection. Archetype matching, staples and replacements use the metagame data built into this file (MTGGoldfish Standard card breakdowns, see the banner for coverage and age).</p>
-                            <details class="hint">
-                                <summary>Build or replace the metagame corpus</summary>
-                                <p class="hint">Paste winning Standard lists (from magic.gg, MTGGoldfish or MTGTop8 exports), one after another. Start each list with a line like <code># Dimir Mill</code> (optionally <code># Dimir Mill | event | date</code>); sideboards are ignored. Or pick several .txt files named like <code>Dimir Mill__event__date.txt</code>, or a corpus .json. The result is saved in this browser and replaces the built-in corpus until cleared.</p>
-                                <textarea
-                                    id="corpus-paste"
-                                    rows="6"
-                                    spellcheck="false"
-                                    placeholder="# Dimir Mill&#10;4 Consult the Star Charts&#10;..."
-                                ></textarea>
-                                <div class="deck__actions">
-                                    <button
-                                        id="corpus-build"
-                                        type="button"
-                                        class="secondary"
-                                    >Build corpus from pasted lists</button>
-                                    <button
-                                        id="corpus-export"
-                                        type="button"
-                                        class="secondary"
-                                    >Export corpus JSON</button>
-                                    <button
-                                        id="corpus-clear"
-                                        type="button"
-                                        class="secondary"
-                                    >Clear saved corpus (back to built-in)</button>
-                                </div>
-                                <p>
-                                    <label for="corpus-file">Or pick files: </label>
-                                    <input
-                                        type="file"
-                                        id="corpus-file"
-                                        accept=".txt,.json,application/json,text/plain"
-                                        multiple
-                                    >
-                                </p>
                             </details>
-                            <div>
-                                <div class="deck__actions">
-                                    <button
-                                        id="metrics-selftest"
-                                        type="button"
-                                        class="secondary"
-                                    >Run self-test</button>
-                                    <button
-                                        id="metrics-clearcache"
-                                        type="button"
-                                        class="secondary"
-                                    >Clear cached card data</button>
-                                </div>
-                                <p id="selftest-status" role="status"></p>
-                            </div>
-                        </details>
-                    </div>
-                </details>
+                        </div>
+                    </details>
+                </div>
+                <section class="stack prose" aria-labelledby="about-heading">
+                    <h2 id="about-heading">About Modicarta</h2>
+                    <p>Modicarta is a Magic: The Gathering Standard deck analyser by Nuadyr. Paste a decklist and it reports:</p>
+                    <ul>
+                        <li>Mana curve and mana ramp</li>
+                        <li>Synergy, overall and by archetype</li>
+                        <li>Metagame match against current Standard archetypes</li>
+                        <li>Card advantage and win conditions</li>
+                        <li>Coloured mana</li>
+                        <li>Competitive validation</li>
+                        <li>Swaps to reach a metagame match, and cards to consider replacing</li>
+                    </ul>
+                    <p class="hint">Metagame data: MTGGoldfish Standard archetype breakdowns, 16 Oct 2026. Themes use Scryfall Oracle tags.</p>
+                </section>
             </div>
-            <section class="about" aria-labelledby="about-heading">
-                <h2 class="section-title" id="about-heading">About Modicarta</h2>
-                <p>Modicarta is a Magic: The Gathering Standard deck analyser by Nuadyr. Paste a decklist and it reports:</p>
-                <ul>
-                    <li>Mana curve and mana ramp</li>
-                    <li>Synergy, overall and by archetype</li>
-                    <li>Metagame match against current Standard archetypes</li>
-                    <li>Card advantage and win conditions</li>
-                    <li>Coloured mana</li>
-                    <li>Competitive validation</li>
-                    <li>Swaps to reach a metagame match, and cards to consider replacing</li>
-                </ul>
-                <p class="hint">Metagame data: MTGGoldfish Standard archetype breakdowns, 16 Oct 2026. Themes use Scryfall Oracle tags.</p>
-            </section>
         </main>
         <p
             id="live"
@@ -853,6 +975,14 @@ summary > h2 { margin: 0; font-size: var(--t-lg); }
             role="status"
             aria-live="polite"
         ></p>
+
+        <footer class="site-footer">
+            <div class="wrap">
+                <p>Modicarta by <a href="https://nuadyr.github.io/">Nuadyr</a>. © 2026.</p>
+                <p class="hint">Built on the Aengus design system.</p>
+            </div>
+        </footer>
+
 
         <script type="application/json" id="metagame-corpus">{"version":1,"generated":"2026-10-16T00:00:00Z","source":"MTGGoldfish Standard archetype card breakdowns, 16 Oct 2026 (every row each archetype page shows, main deck, basic lands left out; all 15 archetypes on the Standard metagame page)","archetypes":[{"name":"Izzet Spellementals","decks":153,"cards":{"Hearth Elemental":[3.9,1.0],"Eddymurk Crab":[3.9,1.0],"Sunderflock":[4.0,0.98],"Impractical Joke":[1.9,0.76],"Sleight of Hand":[4.0,1.0],"Flow State":[3.3,0.37],"Winternight Stories":[2.1,0.42],"Burst Lightning":[3.2,0.99],"Opt":[4.0,1.0],"Spell Pierce":[1.6,0.63],"Spell Snare":[2.0,0.96],"Get Out":[2.3,0.95],"Prismari Charm":[3.9,0.99],"Traumatic Critique":[2.8,0.97],"Riverpyre Verge":[4.0,1.0],"Spirebluff Canal":[4.0,1.0],"Steam Vents":[4.0,1.0],"Stormcarved Coast":[1.7,0.8]}},{"name":"Dimir Midrange","decks":2788,"cards":{"Dream Beavers":[4.0,0.99],"Spyglass Siren":[3.5,1.0],"Yuriko, Hope from the Shadows":[1.1,0.42],"Floodpits Drowner":[4.0,1.0],"The Wondrous Wasp":[1.9,0.99],"Wan Shi Tong, Librarian":[1.3,0.77],"Tishana's Tidebinder":[1.6,0.87],"Enduring Curiosity":[3.8,1.0],"Strategic Betrayal":[1.1,0.67],"Requiting Hex":[3.3,1.0],"Spell Pierce":[1.1,0.4],"Spell Snare":[1.1,0.93],"Bitter Triumph":[2.0,0.99],"Shoot the Sheriff":[1.9,0.99],"Theorix Charm":[1.0,0.46],"We Say Thee Nay!":[2.0,0.96],"Kaito, Bane of Nightmares":[4.0,1.0],"Gloomlake Verge":[4.0,1.0],"Hidden Lair":[2.4,0.93],"Restless Reef":[1.9,0.99],"Shipwreck Marsh":[1.9,0.48],"Soulstone Sanctuary":[2.0,1.0],"Watery Grave":[4.0,1.0]}},{"name":"Mono-Green Landfall","decks":445,"cards":{"Llanowar Elves":[4.0,1.0],"Sazh's Chocobo":[4.0,1.0],"Keen-Eyed Curator":[1.6,0.49],"Mossborn Hydra":[3.4,0.83],"Surrak, Elusive Hunter":[1.1,0.46],"Icetill Explorer":[4.0,0.99],"Mightform Harmonizer":[3.8,0.99],"Esper Origins":[3.4,0.75],"Shared Roots":[2.2,0.45],"Lumbering Worldwagon":[1.2,0.46],"Meltstrider's Resolve":[1.5,0.54],"Earthbender Ascension":[4.0,1.0],"Sapling Nursery":[2.5,0.81],"Ba Sing Se":[2.9,1.0],"Demolition Field":[1.0,0.44],"Elven Passage":[1.9,0.43],"Escape Tunnel":[3.2,0.99],"Fabled Passage":[4.0,1.0]}},{"name":"Boros Dragons","decks":465,"cards":{"Momo, Friendly Flier":[4.0,1.0],"Sarkhan, Dragon Ascendant":[4.0,1.0],"Voice of Victory":[3.5,0.96],"Clarion Conqueror":[4.0,1.0],"Magmatic Hellkite":[4.0,1.0],"Smaug the Magnificent":[4.0,1.0],"Nova Hellkite":[4.0,1.0],"Twinmaw Stormbrood":[2.1,0.99],"Burst Lightning":[4.0,1.0],"Erode":[2.0,0.66],"Get Lost":[2.0,0.35],"Cavern of Souls":[2.4,0.99],"Inspiring Vantage":[4.0,1.0],"Maelstrom of the Spirit Dragon":[3.7,1.0],"Multiversal Passage":[3.9,0.96],"Sacred Foundry":[4.0,1.0],"Sunbillow Verge":[4.0,1.0]}},{"name":"Azorius Control","decks":631,"cards":{"Emeritus of Ideation":[2.7,0.38],"Stock Up":[3.2,0.46],"Day of Judgment":[2.2,0.95],"Erode":[2.3,0.92],"Spell Snare":[1.4,0.4],"Three Steps Ahead":[2.3,0.98],"Consult the Star Charts":[4.0,0.91],"Countersculpt":[3.9,0.54],"Fatehold Charm":[1.7,0.43],"Get Lost":[3.6,0.95],"No More Lies":[3.4,0.99],"Jace's Machinations":[3.3,0.53],"Pinnacle Starcage":[2.0,0.77],"Seam Rip":[3.1,0.99],"The Theorist, Jace Beleren":[3.8,0.57],"Demolition Field":[1.7,0.45],"Deserted Beach":[3.9,0.57],"Floodfarm Verge":[4.0,0.99],"Fountainport":[1.5,0.66],"Hallowed Fountain":[4.0,1.0],"Meticulous Archive":[2.9,0.56],"Petrified Hamlet":[2.5,0.91],"Restless Anchorage":[2.2,0.81],"Theorist's Sanctum":[2.0,0.55]}},{"name":"Jund Sacrifice","decks":111,"cards":{"Callous Inspector":[3.5,1.0],"Gene Pollinator":[4.0,1.0],"Greedy Freebooter":[4.0,1.0],"Biotech Specialist":[4.0,1.0],"Mutagen Man, Living Ooze":[1.8,0.96],"The Sackville-Bagginses":[4.0,1.0],"Umbral Collar Zealot":[1.5,0.93],"Vinereap Mentor":[1.8,0.44],"Rottenmouth Viper":[3.6,0.93],"Deadly Precision":[1.9,0.83],"Lively Dirge":[3.2,0.57],"Requiting Hex":[1.9,0.71],"Fanatical Offering":[1.9,0.54],"Obsessive Pursuit":[4.0,1.0],"Blazemire Verge":[3.2,0.98],"Blood Crypt":[1.3,0.89],"Blooming Marsh":[4.0,1.0],"Overgrown Tomb":[3.5,1.0],"Starting Town":[3.7,0.99],"Stomping Ground":[2.7,1.0],"Wastewood Verge":[1.5,0.82]}},{"name":"Izzet Prowess","decks":93,"cards":{"Elusive Otter":[3.9,0.78],"Pompous Battlemage":[4.0,0.89],"Slickshot Show-Off":[4.0,0.99],"Eddymurk Crab":[1.9,0.57],"Impractical Joke":[1.9,0.52],"Sleight of Hand":[4.0,0.81],"Wild Ride":[1.8,0.74],"Flow State":[3.9,0.7],"Stock Up":[1.1,0.48],"Bounce Off":[2.0,0.49],"Burst Lightning":[4.0,0.95],"Opt":[4.0,0.78],"Secret Identity":[2.2,0.75],"Spell Snare":[1.0,0.44],"Vibrant Outburst":[1.9,0.77],"Great Hall of the Biblioplex":[1.8,0.41],"Multiversal Passage":[2.0,0.75],"Riverpyre Verge":[3.9,1.0],"Spirebluff Canal":[4.0,1.0],"Starting Town":[1.6,0.59],"Steam Vents":[4.0,1.0]}},{"name":"4c Control","decks":1476,"cards":{"North Wind Avatar":[1.1,0.47],"Thor, God of Thunder":[1.0,0.33],"Stock Up":[3.5,1.0],"Day of Judgment":[1.9,0.63],"Deadly Cover-Up":[1.9,0.45],"Together as One":[1.4,0.76],"Firebending Lesson":[2.1,0.56],"Flashback":[1.6,0.96],"Consult the Star Charts":[2.8,0.69],"Lightning Helix":[2.5,0.61],"No More Lies":[2.7,0.57],"Plunder the Trollshaws":[1.9,0.52],"Inevitable Defeat":[3.6,0.99],"Jeskai Revelation":[3.6,0.99],"Tablet of Discovery":[3.5,0.99],"Blazemire Verge":[1.5,0.55],"Bleachbone Verge":[3.1,0.35],"Blood Crypt":[1.5,0.69],"Cori Mountain Monastery":[1.0,0.65],"Deserted Beach":[1.1,0.4],"Gloomlake Verge":[2.0,0.53],"Godless Shrine":[1.7,0.61],"Great Hall of the Biblioplex":[4.0,0.99],"Hallowed Fountain":[2.1,0.63],"Mistrise Village":[1.1,0.76],"Riverpyre Verge":[1.8,0.41],"Sacred Foundry":[2.0,0.97],"Shattered Sanctum":[1.3,0.91],"Starting Town":[1.4,0.36],"Steam Vents":[2.6,0.99],"Stormcarved Coast":[1.0,0.6],"Sundown Pass":[1.0,0.83],"Watery Grave":[2.7,0.36],"Sunbillow Verge":[1.0,0.53]}},{"name":"Lifegain","decks":219,"cards":{"Hinterland Sanctifier":[4.0,1.0],"Liliana the Faultless":[2.1,0.73],"Amalia Benavides Aguirre":[4.0,1.0],"Deep-Cavern Bat":[2.2,0.63],"Enlightened Confidant":[3.0,0.63],"Essence Channeler":[2.2,0.51],"Starscape Cleric":[1.9,0.87],"Haliya, Guided by Light":[3.4,1.0],"Moseo, Vein's New Dean":[2.9,0.96],"Emptiness":[1.6,0.47],"Erode":[2.7,0.95],"Case of the Uneaten Feast":[3.9,1.0],"Lunar Convocation":[3.4,1.0],"Ajani Resolute":[2.6,0.69],"Bleachbone Verge":[1.9,1.0],"Concealed Courtyard":[3.0,0.99],"Dalkovan Encampment":[1.0,0.35],"Godless Shrine":[4.0,1.0],"Multiversal Passage":[3.0,0.61],"Shattered Sanctum":[2.3,0.94],"Starting Town":[3.8,0.96]}},{"name":"Jeskai Artifacts","decks":286,"cards":{"Boomerang Basics":[2.0,0.56],"Day of Judgment":[1.1,0.65],"United Battlefront":[4.0,1.0],"Erode":[1.1,0.54],"Candy Trail":[3.0,0.82],"Clay-Fired Bricks":[1.4,0.79],"Cryogen Relic":[2.9,1.0],"Spring-Loaded Sawblades":[2.0,0.9],"The Irencrag":[1.1,0.76],"The Mind Stone":[2.6,0.96],"Braided Net":[1.4,1.0],"Perilous Snare":[3.5,1.0],"Pinnacle Starcage":[2.9,1.0],"Repurposing Bay":[3.0,1.0],"Simulacrum Synthesizer":[4.0,1.0],"The Fire Crystal":[1.0,1.0],"White Auracite":[1.0,0.58],"Authority of the Consuls":[1.9,0.61],"Castle Doom":[4.0,0.99],"Floodfarm Verge":[4.0,0.99],"Fomori Vault":[1.0,0.64],"Gleaming Bastion":[1.1,0.58],"Hallowed Fountain":[3.6,1.0],"Meticulous Archive":[1.7,0.92],"Petrified Hamlet":[1.8,0.47]}},{"name":"Dimir Reanimator","decks":128,"cards":{"Seasoned Cryomancer":[3.9,0.88],"Superior Spider-Man":[3.9,1.0],"Overlord of the Balemurk":[2.4,0.85],"Deceit":[4.0,1.0],"Uldaros Theorix":[2.4,0.97],"Duress":[3.0,0.97],"Strategic Betrayal":[1.0,1.0],"Winternight Stories":[2.1,1.0],"Deadly Cover-Up":[1.1,0.85],"Requiting Hex":[3.2,1.0],"Bitter Triumph":[2.9,1.0],"Theorix Charm":[3.0,0.94],"The Theorist, Jace Beleren":[2.4,0.5],"Cavern of Souls":[1.9,0.94],"Gloomlake Verge":[4.0,1.0],"Multiversal Passage":[2.0,0.62],"Restless Reef":[3.5,1.0],"Shipwreck Marsh":[3.8,1.0],"Undercity Sewers":[2.1,1.0],"Watery Grave":[4.0,1.0]}},{"name":"Rakdos Lizards","decks":45,"cards":{"Hired Claw":[4.0,1.0],"Iridescent Vinelasher":[4.0,1.0],"Fireglass Mentor":[3.9,0.88],"Flamecache Gecko":[4.0,0.98],"Gev, Scaled Scorch":[3.0,0.98],"Master of Barbs":[4.0,1.0],"Ingris Stingerquill":[3.1,0.98],"Valley Flamecaller":[2.9,0.88],"Burst Lightning":[3.9,0.98],"Stingerquill Charm":[3.9,0.98],"Blazemire Verge":[4.0,0.98],"Blood Crypt":[4.0,1.0],"Cavern of Souls":[2.2,0.8],"Haunted Ridge":[2.4,0.61],"Multiversal Passage":[3.5,0.34],"Rockface Village":[2.1,0.98],"Starting Town":[2.9,0.56]}},{"name":"Azorius Momo","decks":33,"cards":{"Curious Farm Animals":[1.0,0.38],"Guiding Hydra":[1.0,0.76],"Mockingbird":[1.0,0.38],"Momo, Friendly Flier":[4.0,1.0],"Nurturing Pixie":[1.6,0.97],"Zack Fair":[1.0,0.35],"Cosmogrand Zenith":[2.0,0.35],"Haliya, Guided by Light":[1.9,0.47],"Sage of the Skies":[4.0,1.0],"Steamcore Scholar":[3.9,0.65],"Quantum Riddler":[4.0,1.0],"Starfield Shepherd":[3.9,1.0],"Daydream":[3.9,1.0],"Practiced Offense":[3.5,0.74],"Erode":[1.5,0.88],"Get Lost":[1.6,0.41],"Springleaf Drum":[3.6,1.0],"Seam Rip":[2.0,0.85],"Abandoned Air Temple":[2.0,0.94],"Floodfarm Verge":[4.0,1.0],"Gleaming Bastion":[3.8,0.85],"Hallowed Fountain":[4.0,1.0]}},{"name":"Dimir Excruciator","decks":1733,"cards":{"Superior Spider-Man":[4.0,1.0],"Emeritus of Ideation":[2.0,0.97],"M.O.D.O.K.":[1.0,0.53],"Deceit":[4.0,1.0],"Doomsday Excruciator":[2.8,1.0],"Duress":[3.5,1.0],"Day of Black Sun":[2.1,0.42],"Strategic Betrayal":[1.0,0.39],"Stock Up":[2.9,0.86],"Winternight Stories":[2.2,0.94],"Deadly Cover-Up":[1.6,0.94],"Requiting Hex":[3.4,1.0],"Bitter Triumph":[3.6,1.0],"Archenemy's Charm":[1.8,0.69],"Cavern of Souls":[1.9,0.47],"Gloomlake Verge":[4.0,1.0],"Hidden Lair":[1.9,0.36],"Restless Reef":[4.0,1.0],"Shipwreck Marsh":[3.2,0.5],"Undercity Sewers":[1.8,0.94],"Watery Grave":[4.0,1.0]}},{"name":"Boros Dwarves","decks":103,"cards":{"Dwarven Mauler":[4.0,1.0],"Dain's Company":[4.0,1.0],"Dwalin, Weaponmaster":[2.6,0.79],"Giott, King of the Dwarves":[2.0,0.47],"Kili the Resourceful":[4.0,1.0],"Thorin, Mountain-king":[4.0,1.0],"Basilisk Collar":[1.8,0.74],"Doc Ock's Tentacles":[1.7,0.71],"Dragonfire Blade":[4.0,1.0],"Lavaspur Boots":[3.9,1.0],"Chainsaw":[3.0,0.61],"Leyline Axe":[4.0,1.0],"Cavern of Souls":[3.2,1.0],"Inspiring Vantage":[4.0,1.0],"Multiversal Passage":[1.1,0.37],"Sacred Foundry":[3.9,1.0],"Sunbillow Verge":[4.0,0.95],"The Lonely Mountain":[4.0,1.0]}}]}</script>
         <script type="text/plain" id="jspdf-lib">
@@ -1702,12 +1832,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     paintChart(entry);
   };
 
+  let tableCount = 0;
   const simpleTable = (label, headers, rows) => {
     const wrap = el('div', 'table-scroll');
+    const caption = el('caption', 'visually-hidden', label);
+    caption.id = `table-caption-${++tableCount}`;
     wrap.tabIndex = 0;
     wrap.setAttribute('role', 'region');
-    wrap.setAttribute('aria-label', label);
+    wrap.setAttribute('aria-labelledby', caption.id);
     const table = el('table');
+    table.append(caption);
     const headRow = el('tr');
     for (const h of headers) {
       const th = el('th', rows.length > 0 && typeof rows[0][headers.indexOf(h)] === 'number' ? 'num' : '', h);
@@ -2092,12 +2226,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   };
   /* TESTS-END */
 
+  const ROLE_BADGE = Object.freeze({ replace: 'warn', with: 'ok' }); // swap roles: the badge shape, word and colour
   const cardLine = (prefix, name, card, note) => {
-    const line = el('div', 'metrics__card');
+    const line = el('div', 'swap__card');
     line.dataset.cardName = name;
-    line.dataset.role = prefix.replace(/:$/, '').toLowerCase();
-    line.append(el('span', 'metrics__tag', prefix), makeOpenButton(name, 'linklike', name));
-    if (card?.mana_cost) {line.append(el('span', 'card__cost', card.mana_cost));}
+    const role = prefix.replace(/:$/, '').toLowerCase();
+    line.dataset.role = role;
+    line.append(el('span', `badge badge--${ROLE_BADGE[role] ?? 'info'}`, prefix), makeOpenButton(name, 'swap__name', name));
+    if (card?.mana_cost) {line.append(el('span', 'swap__cost', card.mana_cost));}
     line.append(el('span', 'hint', note));
     return line;
   };
@@ -3031,13 +3167,17 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   const renderValidation = ({ warnings, skipped }) => {
     const parts = [];
     if (warnings.length === 0) {
-      parts.push(el('p', 'validation__ok', '✓ Deck meets competitive structural heuristics.'));
+      const ok = el('p', 'note note--ok');
+      ok.append(el('span', '', 'Deck meets competitive structural heuristics.'));
+      parts.push(ok);
     } else {
-      const list = el('ul', 'validation__list');
+      const list = el('ul', 'tags');
       for (const text of warnings) {
-        const item = el('li', 'validation__item');
+        const item = el('li', 'note note--warn');
         const at = text.indexOf(': ') + 1; // bold the rule name before the first colon
-        item.append(el('strong', '', text.slice(0, at)), el('span', '', text.slice(at).trim()));
+        const wording = el('span');
+        wording.append(el('strong', '', text.slice(0, at)), ` ${text.slice(at).trim()}`);
+        item.append(wording);
         list.append(item);
       }
       parts.push(list);
@@ -3164,14 +3304,14 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     const stats = (...items) => { const dl = el('dl', 'stats'); dl.append(...items.map(([l, v]) => stat(l, v))); return dl; };
     const facts = (lines) => { const ul = el('ul', 'facts'); ul.append(...lines.map((l) => el('li', '', l))); return ul; };
     const chips = (names, cap) => { const ul = el('ul', 'chips'); ul.append(...names.slice(0, cap).map((n) => el('li', 'chip', n))); if (names.length > cap) {ul.append(el('li', 'chip chip--more', `+${names.length - cap} more`));} return ul; };
-    const fold = (title, ...kids) => { const d = el('details', 'fold'); d.append(el('summary', '', title), ...kids); return d; };
-    const note = (kind, text) => el('p', `note note--${kind}`, text);
+    const fold = (title, ...kids) => { const d = el('details'); d.append(el('summary', '', title), ...kids); return d; };
+    const note = (kind, text) => { const p = el('p', `note note--${kind}`); p.append(el('span', '', text)); return p; };
 
     const metaParts = [];
     if (m.arch) {
       const head = el('p', 'match__head');
       head.append(el('strong', 'match__pct', `${m.pct}%`), `similar to ${m.arch}${m.usable ? '' : ' (too low to classify)'}`);
-      const meter = el('meter', 'match__meter', `${m.pct}%`);
+      const meter = el('meter', 'meter', `${m.pct}%`);
       Object.assign(meter, { min: 0, max: 100, value: m.pct });
       meter.setAttribute('aria-label', `Similarity to ${m.arch}`);
       const box = el('div', 'match');
@@ -3723,7 +3863,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
               }
               const note = `Not changed: no replacement was found. ${reasons.length ? reasons.join('; ') + '.' : 'The available receivers failed the copy-limit or eligibility checks.'} No copies were moved, so deck size is unchanged.`;
               report.replacements.push({ replace: entry.name, reason: `Mana value ${cmcOf(entry)}, ${entry.qty} ${entry.qty === 1 ? 'copy' : 'copies'}. ${note}`, with: 'None found', detail: note });
-              const li = el('li', 'metrics__swap');
+              const li = el('li', 'swap');
               li.append(cardLine('Unchanged:', entry.name, cardCache.get(entry.name), `No swap applied. ${note}`));
               li.append(el('p', 'hint', note));
               rows.push(li);
@@ -3747,7 +3887,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
               with: parts.length > 0 ? parts.map((x) => `${x.qty}x ${x.card.name}`).join(', ') : 'None found',
               detail: parts.length > 0 ? parts.map(detailOf).join(' ') : noPickText,
             });
-            const li = el('li', 'metrics__swap');
+            const li = el('li', 'swap');
             li.dataset.from = entry.name;
             li.append(cardLine('Replace:', entry.name, cardCache.get(entry.name), reason));
             if (parts.length === 0) {li.append(el('p', 'hint', noPickText));}
@@ -3799,7 +3939,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
               const reason = `Mana value ${cmcOf(d)}, ${d.qty} ${d.qty === 1 ? 'copy' : 'copies'}. Played in ${Math.round(adoptOf(d) * 100)}% of ${corp.arch} lists.${lossNote(d.name)}`;
               const detail = `${st.card.name} is played in ${Math.round(st.adoption * 100)}% of ${corp.arch} lists (${fmtCount(st.avgCopies)} copies on average) and the deck has none.`;
               report.replacements.push({ replace: d.name, reason, with: `${give}x ${st.card.name}`, detail });
-              const li = el('li', 'metrics__swap');
+              const li = el('li', 'swap');
               li.dataset.from = d.name;
               li.append(cardLine('Replace:', d.name, cardCache.get(d.name), reason));
               li.append(cardLine('With:', st.card.name, st.card, `${give}x. ${detail}`));
@@ -3938,7 +4078,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
               const cutAdoption = best.counts.get(normalise(fromName)) ? best.counts.get(normalise(fromName)) / best.size : 0;
               const reason = `${copies} ${copies === 1 ? 'copy' : 'copies'} of this card move. Played in ${pct(cutAdoption)} of ${best.arch} lists.${lossNote(fromName)}`;
               const detailOf = (x) => `${x.qty}x. Played in ${pct(x.adoption)} of ${best.arch} lists (${fmtCount(x.avg)} copies on average).`;
-              const li = el('li', 'metrics__swap');
+              const li = el('li', 'swap');
               li.append(cardLine('Replace:', fromName, cardCache.get(fromName), reason));
               for (const x of tos.values()) {li.append(cardLine('With:', x.card.name, x.card, detailOf(x)));}
               liftRows.push(li);
@@ -4671,17 +4811,18 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
   const surfaceNextStep = () => {
     const note = $('next-step');
-    const first = ui.validationPanel.querySelector('.validation__item');
-    const swaps = ui.replaceList.querySelectorAll('.metrics__swap[data-from]').length;
-    note.replaceChildren();
+    const first = ui.validationPanel.querySelector('.note--warn');
+    const swaps = ui.replaceList.querySelectorAll('.swap[data-from]').length;
+    const body = el('span');
+    note.replaceChildren(body);
     if (first) {
       const rule = (first.querySelector('strong')?.textContent ?? '').replace(/:\s*$/, '') || 'the first warning';
       const go = el('button', 'linklike', `Start with ${rule}`);
       go.type = 'button';
       go.addEventListener('click', () => { first.tabIndex = -1; bringIntoView(first, 'center'); first.focus(); });
-      note.append(go, document.createTextNode(' The checks found this problem first.'));
+      body.append(go, document.createTextNode(' The checks found this problem first.'));
     } else if (swaps > 0) {
-      note.append('No structural warnings. Try one suggested swap below and see what changes.');
+      body.append('No structural warnings. Try one suggested swap below and see what changes.');
     } else {
       note.hidden = true;
       return;
@@ -4708,7 +4849,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       announce('Swap undone. Checking the deck again.');
       startAnalysis();
     });
-    bar.replaceChildren(el('p', '', text), undo);
+    const content = el('span', 'row');
+    content.append(el('p', '', text), undo);
+    bar.replaceChildren(content);
     bar.hidden = false;
     announce(text);
     undo.focus();
@@ -4724,15 +4867,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     if (!applyOnce()) { pendingSwaps = held; return; }
     undoDeck = snapshot;
     tryKey = deckKey();
-    ui.replaceList.querySelectorAll('.metrics__try').forEach((b) => { b.disabled = true; });
+    ui.replaceList.querySelectorAll('.swap__try').forEach((b) => { b.disabled = true; });
     if (await runMetrics()) {showTryBar(from, before, { warnings: warningCount(), flagged: flaggedCount() });}
   };
 
   const addTryButtons = () => {
-    for (const li of ui.replaceList.querySelectorAll('.metrics__swap[data-from]')) {
+    for (const li of ui.replaceList.querySelectorAll('.swap[data-from]')) {
       const from = li.dataset.from;
-      if (li.querySelector('.metrics__try') || !pendingSwaps.some((s) => s.from === from)) {continue;}
-      const btn = el('button', 'secondary small metrics__try', 'Try this swap');
+      if (li.querySelector('.swap__try') || !pendingSwaps.some((s) => s.from === from)) {continue;}
+      const btn = el('button', 'secondary small swap__try', 'Try this swap');
       btn.type = 'button';
       btn.setAttribute('aria-label', `Try this swap for ${from}`);
       btn.addEventListener('click', () => trySwap(from));
@@ -4748,7 +4891,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     stage.classList.toggle('is-loaded', loaded);
     if (!loaded) {stage.classList.remove('is-editing');}
     $('deck-heading').textContent = loaded ? (ui.deckName.value.trim() || 'Deck') : 'Deck';
-    $('metrics').closest('.deck').hidden = !loaded;
+    $('results').hidden = !loaded;
   };
   const setEditing = (on) => {
     stage.classList.toggle('is-editing', on);
@@ -4768,13 +4911,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
   // Each swap shows the two cards as pictures, so a swap reads as one card leaving and another arriving.
   const decorateCards = () => {
-    for (const line of document.querySelectorAll('#replace-list .metrics__card[data-card-name], #lift-list .metrics__card[data-card-name]')) {
+    for (const line of document.querySelectorAll('#replace-list .swap__card[data-card-name], #lift-list .swap__card[data-card-name]')) {
       if (line.classList.contains('has-thumb')) {continue;}
       const src = safeImage(thumbOf(refFor(line.dataset.cardName)));
       if (!src) {continue;}
-      const text = el('div', 'metrics__card-text');
+      const text = el('div', 'swap__card-text');
       text.append(...line.childNodes);
-      const img = el('img', 'metrics__thumb');
+      const img = el('img', 'swap__thumb');
       img.src = src;
       img.alt = '';
       img.loading = 'lazy';
@@ -5016,4 +5159,4 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 })();
         </script>
     </body>
-</html
+</html>
